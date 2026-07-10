@@ -17,7 +17,8 @@ import {
   Server,
   Brain,
   ArrowRight,
-  Monitor
+  Monitor,
+  Smartphone
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -319,10 +320,24 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Web Development</h3>
                 <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Full stack training covering structural layout and presentation layers using HTML, CSS, JavaScript, React, and Bootstrap.
+                  Full stack training covering structural layout and presentation layers using HTML, CSS, JavaScript, React, and Node.
                 </p>
               </div>
-              <span className="text-xs font-semibold text-blue-400">HTML, CSS, React, JS</span>
+              <span className="text-xs font-semibold text-blue-400">HTML, CSS, JS, Node, React</span>
+            </div>
+
+            {/* Course 6 */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-emerald-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4 font-bold">
+                  <Smartphone className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Mobile Development</h3>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                  Build cross-platform mobile apps for iOS and Android using React Native and Flutter, with device feature integrations and store publishing.
+                </p>
+              </div>
+              <span className="text-xs font-semibold text-emerald-400">React Native, Flutter, iOS, Android</span>
             </div>
 
             {/* Course 2 */}
@@ -380,6 +395,8 @@ export default function LandingPage() {
               </div>
               <span className="text-xs font-semibold text-teal-400">Freelancing & Jobs</span>
             </div>
+
+
           </div>
         </div>
       </section>
