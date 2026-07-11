@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import api from '@/lib/axios';
 import { User, Mail, Phone, Shield, Power, Edit2, CheckCircle, AlertCircle, Save, Key } from 'lucide-react';
 
@@ -122,6 +123,15 @@ export default function ProfilePage() {
                 <Shield className="w-3 h-3 mr-1.5" />
                 {user.role?.name || 'STUDENT'}
               </div>
+              {user.role?.name === 'ADMIN' && (
+                <Link
+                  href="/admin"
+                  className="mt-4 flex items-center justify-center text-xs font-semibold uppercase tracking-wider text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 rounded-xl px-4 py-2 transition-all w-full"
+                >
+                  <Shield className="w-3.5 h-3.5 mr-2 animate-pulse" />
+                  Admin Dashboard
+                </Link>
+              )}
             </div>
 
             {/* Detailed Properties */}

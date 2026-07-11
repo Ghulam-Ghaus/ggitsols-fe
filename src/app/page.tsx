@@ -40,8 +40,9 @@ export default function LandingPage() {
         </div>
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-400">
           <a href="#hero" className="hover:text-white transition-colors">Home</a>
-          <a href="#about" className="hover:text-white transition-colors">Founder Profile</a>
-          <a href="#team" className="hover:text-white transition-colors">Leadership</a>
+          <a href="#about" className="hover:text-white transition-colors">CEO Profile</a>
+          <a href="#co-founder" className="hover:text-white transition-colors">Co-Founder</a>
+          <a href="#team" className="hover:text-white transition-colors">Team</a>
           <a href="#courses" className="hover:text-white transition-colors">Courses</a>
         </nav>
         <div>
@@ -122,7 +123,7 @@ export default function LandingPage() {
         <div className="max-w-6xl w-full mx-auto">
           <div className="flex flex-col items-center mb-12 text-center">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-blue-400">Leadership Spotlight</h2>
-            <p className="text-3xl md:text-4xl font-bold mt-2 text-white">About the Founder</p>
+            <p className="text-3xl md:text-4xl font-bold mt-2 text-white">About the CEO</p>
           </div>
 
           {/* Full Screen Card: Left Image, Right details */}
@@ -149,7 +150,7 @@ export default function LandingPage() {
               <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-center">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
                   <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-xs font-semibold text-blue-400 uppercase tracking-wide">
-                    Founder & Director
+                    Co-Founder & CEO
                   </span>
                   <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full text-xs font-semibold text-purple-400 uppercase tracking-wide">
                     Agentic AI Engineer
@@ -170,11 +171,11 @@ export default function LandingPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
                     <Mail className="w-5 h-5 text-blue-400 shrink-0" />
-                    <span className="truncate">ghulamghaus266@gmail.com</span>
+                    <span className="truncate">ghulamghaus266@gmail.com </span>
                   </div>
                   <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
                     <Phone className="w-5 h-5 text-purple-400 shrink-0" />
-                    <span>+92 306 7956164</span>
+                    <span>+92 306 7956164 / +92 302 0655044</span>
                   </div>
                   <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
                     <MapPin className="w-5 h-5 text-pink-400 shrink-0" />
@@ -227,73 +228,200 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Leadership Co-Founder and Software Engineer Grid */}
-      <section id="team" className="py-20 px-6 bg-slate-900/10 border-t border-white/5 relative">
+      {/* Main Co-Founder Feature Card (Full Screen Grid: Image Left, Details Right) */}
+      <section id="co-founder" className="py-20 px-6 bg-slate-900/10 border-t border-white/5 relative">
         <div className="max-w-6xl w-full mx-auto">
           <div className="flex flex-col items-center mb-12 text-center">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-purple-400">Team Structure</h2>
-            <p className="text-3xl md:text-4xl font-bold mt-2 text-white">Institute Leadership</p>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-purple-400">Leadership Spotlight</h2>
+            <p className="text-3xl md:text-4xl font-bold mt-2 text-white">About the Co-Founder</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 [perspective:1000px]">
-            {/* Co-Founder Card */}
+          {/* Full Screen Card: Left Image, Right details */}
+          <div className="w-full [perspective:1200px]">
             <div
-              className="bg-slate-900/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl 
-                         [transform-style:preserve-3d] transition-all duration-500 ease-out hover:[transform:rotateX(3deg)_rotateY(-3deg)_translateZ(10px)] 
-                         hover:border-purple-500/30 hover:shadow-purple-500/5 flex flex-col sm:flex-row gap-6 items-center sm:items-start"
+              className="bg-slate-900/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl 
+                         [transform-style:preserve-3d] transition-all duration-500 ease-out hover:[transform:rotateX(2deg)_rotateY(-2deg)_translateZ(10px)] 
+                         hover:border-purple-500/30 hover:shadow-purple-500/5 grid grid-cols-1 lg:grid-cols-12 min-h-[550px]"
             >
-              {/* Left Side: Large rounded photo */}
-              <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-purple-500/30 shrink-0 shadow-lg bg-slate-950">
-                <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop"
-                  alt="Saqib Javed - Co-Founder & COO"
-                  className="w-full h-full object-cover"
+              {/* Left Side: Co-Founder Image */}
+              <div className="lg:col-span-5 relative min-h-[400px] lg:min-h-full bg-slate-950">
+                <Image
+                  src="/saqib.jpg"
+                  alt="Saqib Javed - Co-Founder & COO of GG IT Solutions"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className="object-cover object-top transition-transform duration-700 hover:scale-105"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-slate-950/10 lg:to-slate-950/40"></div>
               </div>
-              {/* Right Side: Details */}
-              <div className="flex-1">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-purple-400 mb-1">GG IT Solutions</h4>
-                <h3 className="text-2xl font-black text-white leading-tight">Saqib Javed</h3>
-                <p className="text-slate-400 text-xs font-semibold mb-3">Co-Founder & COO</p>
-                <p className="text-slate-300 text-sm leading-relaxed mb-6">
-                  Directs administrative workflows, curriculum alignment, student success initiatives, and coordinates local industry connections. Ensures that our operational infrastructure provides students with high-quality services and seamless academic progression.
+
+              {/* Right Side: Professional Details */}
+              <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-center">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full text-xs font-semibold text-purple-400 uppercase tracking-wide">
+                    Co-Founder & COO
+                  </span>
+                  <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-xs font-semibold text-blue-400 uppercase tracking-wide">
+                    Academic Planning
+                  </span>
+                </div>
+
+                <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-2">Saqib Javed</h3>
+                <p className="text-slate-400 text-base md:text-lg font-medium mb-6 border-b border-white/5 pb-4">
+                  Operations & Infrastructure Management | Curriculum Alignment | Student Placement
                 </p>
-                <div className="border-t border-white/5 pt-4 flex flex-wrap gap-2">
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Academic Planning</span>
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Partnerships</span>
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Student Support</span>
+
+                {/* Professional Bio */}
+                <p className="text-slate-300 leading-relaxed text-sm md:text-base mb-6">
+                  Saqib Javed is the driving operational force behind **GG IT Solutions**. As Co-Founder & COO, he oversees all administrative workflows, curriculum structuring, and student success initiatives. Dedicated to fostering industry alliances, he ensures that the institute's educational delivery is seamless, state-of-the-art, and aligned with practical career opportunities.
+                </p>
+
+                {/* Grid of details */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
+                    <Users className="w-5 h-5 text-purple-400 shrink-0" />
+                    <span>Academic & Student Coordination</span>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
+                    <Phone className="w-5 h-5 text-purple-400 shrink-0" />
+                    <span>+92 302 0655044</span>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
+                    <Award className="w-5 h-5 text-blue-400 shrink-0" />
+                    <span>Strategic Operations Lead</span>
+                  </div>
+                </div>
+
+                {/* Core Domains */}
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Core Focus Areas</p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Operations Management', 'Academic Integrity', 'Partnerships', 'Student Support', 'Career Counselling'].map((focus) => (
+                      <span key={focus} className="bg-white/5 border border-white/10 text-slate-300 text-xs px-2.5 py-1 rounded-lg">
+                        {focus}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Software Engineer Card */}
+      {/* Engineering Team Section */}
+      <section id="team" className="py-20 px-6 bg-slate-950 border-t border-white/5 relative">
+        <div className="max-w-6xl w-full mx-auto">
+          <div className="flex flex-col items-center mb-12 text-center">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-blue-400">Team Structure</h2>
+            <p className="text-3xl md:text-4xl font-bold mt-2 text-white">Engineering & Instruction</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 [perspective:1000px]">
+            {/* CEO Card: Ghulam Ghaus */}
             <div
               className="bg-slate-900/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl 
                          [transform-style:preserve-3d] transition-all duration-500 ease-out hover:[transform:rotateX(3deg)_rotateY(-3deg)_translateZ(10px)] 
-                         hover:border-blue-500/30 hover:shadow-blue-500/5 flex flex-col sm:flex-row gap-6 items-center sm:items-start"
+                         hover:border-blue-500/30 hover:shadow-blue-500/5 flex flex-col gap-6"
             >
-              {/* Left Side: Large rounded photo */}
-              <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-blue-500/30 shrink-0 shadow-lg bg-slate-950">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
-                  alt="Ali - Software Engineer"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Right Side: Details */}
-              <div className="flex-1">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 mb-1">GG IT Solutions</h4>
-                <h3 className="text-2xl font-black text-white leading-tight">Ali</h3>
-                <p className="text-slate-400 text-xs font-semibold mb-3">Software Engineer</p>
-                <p className="text-slate-300 text-sm leading-relaxed mb-6">
-                  Specializes in modern client-side architectures, including Web, Mobile Apps and AI. Built the portal interface and guides students in hands-on workshops, helping them build production-grade applications.
-                </p>
-                <div className="border-t border-white/5 pt-4 flex flex-wrap gap-2">
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">React/Next.js</span>
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Web/Mobile Apps</span>
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">AI</span>
-                  <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Mentorship</span>
+              {/* Profile Image & Role Header */}
+              <div className="flex items-center gap-4">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-blue-500/30 shrink-0 shadow-lg bg-slate-950">
+                  <Image
+                    src="/founder.png"
+                    alt="Ghulam Ghaus - Co-Founder & CEO"
+                    fill
+                    sizes="80px"
+                    className="object-cover object-top"
+                  />
                 </div>
+                <div>
+                  <h3 className="text-xl font-black text-white leading-tight">Ghulam Ghaus</h3>
+                  <p className="text-blue-400 text-xs font-bold uppercase tracking-wider mt-1">Founder & CEO</p>
+                </div>
+              </div>
+
+              {/* Bio details */}
+              <p className="text-slate-300 text-sm leading-relaxed min-h-[80px]">
+                Specializes in enterprise-grade backends, real-time AI agents, STT/TTS voice pipelines, and scalable cloud architectures. Leads overall academic and development vision.
+              </p>
+
+              {/* Badges */}
+              <div className="border-t border-white/5 pt-4 flex flex-wrap gap-2 mt-auto">
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Python/Node.js</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">AI Agentic Tech</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Cloud/NestJS</span>
+              </div>
+            </div>
+
+            {/* COO Card: Saqib Javed */}
+            <div
+              className="bg-slate-900/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl 
+                         [transform-style:preserve-3d] transition-all duration-500 ease-out hover:[transform:rotateX(3deg)_rotateY(-3deg)_translateZ(10px)] 
+                         hover:border-purple-500/30 hover:shadow-purple-500/5 flex flex-col gap-6"
+            >
+              {/* Profile Image & Role Header */}
+              <div className="flex items-center gap-4">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-purple-500/30 shrink-0 shadow-lg bg-slate-950">
+                  <Image
+                    src="/saqib.jpg"
+                    alt="Saqib Javed - Co-Founder & COO"
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-white leading-tight">Saqib Javed</h3>
+                  <p className="text-purple-400 text-xs font-bold uppercase tracking-wider mt-1">Co-Founder & COO</p>
+                </div>
+              </div>
+
+              {/* Bio details */}
+              <p className="text-slate-300 text-sm leading-relaxed min-h-[80px]">
+                Directs administrative workflows, coordinates academic alignment, manages industry partnerships, and steers operational infrastructure and student success career programs.
+              </p>
+
+              {/* Badges */}
+              <div className="border-t border-white/5 pt-4 flex flex-wrap gap-2 mt-auto">
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Operations Lead</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Academic Quality</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Partnerships</span>
+              </div>
+            </div>
+
+            {/* Software Engineer Card: Ali Raza */}
+            <div
+              className="bg-slate-900/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl 
+                         [transform-style:preserve-3d] transition-all duration-500 ease-out hover:[transform:rotateX(3deg)_rotateY(-3deg)_translateZ(10px)] 
+                         hover:border-blue-500/30 hover:shadow-blue-500/5 flex flex-col gap-6"
+            >
+              {/* Profile Image & Role Header */}
+              <div className="flex items-center gap-4">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-blue-500/30 shrink-0 shadow-lg bg-slate-950">
+                  <img
+                    src="/ali.jpg"
+                    alt="Ali Raza - Software Engineer"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-white leading-tight">Ali Raza</h3>
+                  <p className="text-blue-400 text-xs font-bold uppercase tracking-wider mt-1">Software Engineer</p>
+                </div>
+              </div>
+
+              {/* Bio details */}
+              <p className="text-slate-300 text-sm leading-relaxed min-h-[80px]">
+                Specializes in modern client-side architectures, including Web, Mobile Apps, and AI. Built the portal interface and guides students in hands-on workshops, helping them build production-grade applications.
+              </p>
+
+              {/* Badges */}
+              <div className="border-t border-white/5 pt-4 flex flex-wrap gap-2 mt-auto">
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">React/Next.js</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Web/Mobile Apps</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">AI</span>
+                <span className="bg-white/5 text-slate-400 text-xs px-2 py-1 rounded">Mentorship</span>
               </div>
             </div>
           </div>
@@ -423,7 +551,7 @@ export default function LandingPage() {
             <span className="font-semibold text-slate-300 uppercase tracking-wider mb-2">Contact Us</span>
             <div className="flex items-center space-x-2">
               <Phone className="w-3.5 h-3.5 text-blue-400" />
-              <span>+92 306 7956164</span>
+              <span>+92 306 7956164 / 03020655044</span>
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="w-3.5 h-3.5 text-purple-400" />

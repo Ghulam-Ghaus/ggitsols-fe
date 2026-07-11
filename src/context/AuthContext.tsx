@@ -64,17 +64,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setToken(savedToken);
           const decoded = decodeTokenPayload(savedToken);
           if (decoded && decoded.id) {
-            try {
-              // Fetch complete profile using user ID from token
-              const res = await api.get(`/users/${decoded.id}`);
-              setUser(res.data.data); // NestJS transform interceptor wraps in { data }
-            } catch (err) {
-              console.error('Failed to load profile, token might be invalid/expired:', err);
-              // Clear invalid session
-              localStorage.removeItem('token');
-              setToken(null);
-              setUser(null);
-            }
+            setUser({
+              id: decoded.id,
+              email: decoded.email,
+              firstName: decoded.firstName || '',
+              lastName: decoded.lastName || '',
+              isActive: true,
+              role: {
+                id: decoded.roleId || 0,
+                name: decoded.role || '',
+                permissions: decoded.permissions || {}
+              }
+            } as any);
           } else {
             localStorage.removeItem('token');
           }
@@ -92,13 +93,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const res = await api.post('/users/login', { email, password: pass });
       // NestJS wraps response inside `data` property because of TransformInterceptor
       const responseData = res.data.data;
-      const { accessToken, user: returnedUser } = responseData;
+      const { accessToken } = responseData;
       
       localStorage.setItem('token', accessToken);
       setToken(accessToken);
-      setUser(returnedUser);
       
-      router.push('/profile');
+      const decoded = decodeTokenPayload(accessToken);
+      const userFromToken = decoded ? {
+        id: decoded.id,
+        email: decoded.email,
+        firstName: decoded.firstName || '',
+        lastName: decoded.lastName || '',
+        isActive: true,
+        role: {
+          id: decoded.roleId || 0,
+          name: decoded.role || '',
+          permissions: decoded.permissions || {}
+        }
+      } : null;
+      
+      setUser(userFromToken as any);
+      
+      if (decoded?.role === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/profile');
+      }
     } catch (error) {
       setLoading(false);
       throw error;

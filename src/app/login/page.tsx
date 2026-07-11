@@ -7,18 +7,22 @@ import Link from 'next/link';
 import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
-  const { login, isAuthenticated, loading } = useAuth();
+  const { login, isAuthenticated, loading, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Redirect to profile if already logged in
+  // Redirect to dashboard/profile if already logged in
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/profile');
+    if (isAuthenticated && user) {
+      if (user.role?.name === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/profile');
+      }
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
