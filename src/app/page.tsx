@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
+import VoiceAssistant from '@/components/VoiceAssistant';
 import {
   Mail,
   Phone,
@@ -67,53 +68,64 @@ export default function LandingPage() {
 
       {/* Hero Section with Flyer Full Background */}
       <section id="hero" className="relative min-h-[85vh] flex items-center justify-center py-20 px-6 overflow-hidden">
-        {/* Full Background Flyer Image with dark overlay */}
+        {/* Full Background Video with dark overlay */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/flyer.jpg"
-            alt="GG IT Solutions Flyer background"
-            fill
-            priority
-            className="object-cover opacity-15 filter blur-[2px]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/95 to-slate-950"></div>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-35"
+          >
+            <source src="/heroSectionVideo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/70 to-slate-950"></div>
         </div>
 
         {/* Floating Glowing Orbs */}
         <div className="absolute top-1/4 left-10 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <div className="relative z-10 max-w-4xl text-center flex flex-col items-center">
-          <div className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse">
-            <Sparkles className="w-4 h-4" />
-            <span>Build Skills • Build Future</span>
+        <div className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Column: Headline, Subtitle & Actions */}
+          <div className="lg:col-span-7 text-left flex flex-col items-start">
+            <div className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse">
+              <Sparkles className="w-4 h-4" />
+              <span>Build Skills • Build Future</span>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+              <span className="text-white">Learn Today</span><br />
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Lead Tomorrow
+              </span>
+            </h1>
+
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed mb-8">
+              Empowering students with practical knowledge, hands-on experience, and personalized mentorship in modern technologies to build successful careers in IT.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <Link
+                href="/register"
+                className="w-full sm:w-auto flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/15 transition-all text-sm md:text-base group"
+              >
+                Get Started Now
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <a
+                href="#about"
+                className="w-full sm:w-auto flex items-center justify-center bg-slate-900/40 hover:bg-slate-900/60 border border-white/10 rounded-xl px-8 py-3.5 text-sm md:text-base transition-all font-medium"
+              >
+                Meet the Founder
+              </a>
+            </div>
           </div>
 
-          <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight mb-6">
-            <span className="text-white">Learn Today</span><br />
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Lead Tomorrow
-            </span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed mb-8">
-            Empowering students with practical knowledge, hands-on experience, and personalized mentorship in modern technologies to build successful careers in IT.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <Link
-              href="/register"
-              className="w-full sm:w-auto flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/15 transition-all text-sm md:text-base group"
-            >
-              Get Started Now
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <a
-              href="#about"
-              className="w-full sm:w-auto flex items-center justify-center bg-slate-900/40 hover:bg-slate-900/60 border border-white/10 rounded-xl px-8 py-3.5 text-sm md:text-base transition-all font-medium"
-            >
-              Meet the Founder
-            </a>
+          {/* Right Column: 3D Call Dashboard Card */}
+          <div className="lg:col-span-5 w-full flex justify-center [perspective:1000px]">
+            <VoiceAssistant />
           </div>
         </div>
       </section>
