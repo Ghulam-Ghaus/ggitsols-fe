@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/axios';
-import { User, Mail, Phone, Shield, Power, Edit2, CheckCircle, AlertCircle, Save, Key } from 'lucide-react';
+import { User, Mail, Phone, Shield, Power, Edit2, CheckCircle, AlertCircle, Save, Key, Globe } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, token, loading, logout, refreshUser } = useAuth();
@@ -94,13 +94,31 @@ export default function ProfilePage() {
           </div>
           <span className="font-bold tracking-wide text-sm md:text-base">IT SOLUTIONS ERP & LMS</span>
         </div>
-        <button
-          onClick={logout}
-          className="flex items-center text-xs font-semibold uppercase tracking-wider text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl px-4 py-2 transition-all cursor-pointer"
-        >
-          <Power className="w-4 h-4 mr-2" />
-          Logout
-        </button>
+        <div className="flex items-center space-x-3">
+          <Link
+            href="/"
+            className="flex items-center text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-white bg-slate-800/40 hover:bg-slate-800/80 border border-white/10 rounded-xl px-4 py-2.5 transition-all"
+          >
+            <Globe className="w-4 h-4 mr-2" />
+            Website
+          </Link>
+          {user?.role?.name === 'ADMIN' && (
+            <Link
+              href="/admin"
+              className="flex items-center text-xs font-semibold uppercase tracking-wider text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 rounded-xl px-4 py-2.5 transition-all"
+            >
+              <Shield className="w-4 h-4 mr-2" />
+              Admin
+            </Link>
+          )}
+          <button
+            onClick={logout}
+            className="flex items-center text-xs font-semibold uppercase tracking-wider text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl px-4 py-2.5 transition-all cursor-pointer"
+          >
+            <Power className="w-4 h-4 mr-2" />
+            Logout
+          </button>
+        </div>
       </header>
 
       {/* Main Grid Layout */}

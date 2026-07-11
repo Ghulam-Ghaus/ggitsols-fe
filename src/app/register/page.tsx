@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Mail, Lock, User, Phone, UserPlus, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, Phone, UserPlus, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function RegisterPage() {
   const { register, isAuthenticated, loading } = useAuth();
@@ -54,6 +54,17 @@ export default function RegisterPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-slate-950 px-4 py-12 overflow-hidden font-sans">
+      {/* Floating Back to Website Button */}
+      <div className="absolute top-6 left-6 z-50">
+        <Link 
+          href="/"
+          className="flex items-center text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 transition-all shadow-md"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Website
+        </Link>
+      </div>
+
       {/* 3D Ambient Glowing Circles */}
       <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>

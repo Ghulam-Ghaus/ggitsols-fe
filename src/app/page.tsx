@@ -92,7 +92,7 @@ export default function LandingPage() {
           <div className="lg:col-span-7 text-left flex flex-col items-start">
             <div className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse">
               <Sparkles className="w-4 h-4" />
-              <span>Build Skills • Build Future</span>
+              <span>Admissions Open 2026 • Build Skills • Build Future</span>
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
@@ -108,18 +108,18 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
               <Link
-                href="/register"
+                href="/apply"
                 className="w-full sm:w-auto flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/15 transition-all text-sm md:text-base group"
               >
-                Get Started Now
+                Apply Now
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <a
-                href="#about"
-                className="w-full sm:w-auto flex items-center justify-center bg-slate-900/40 hover:bg-slate-900/60 border border-white/10 rounded-xl px-8 py-3.5 text-sm md:text-base transition-all font-medium"
+              <Link
+                href="/login"
+                className="w-full sm:w-auto flex items-center justify-center bg-slate-900/40 hover:bg-slate-900/60 border border-white/10 rounded-xl px-8 py-3.5 text-sm md:text-base transition-all font-medium text-slate-300 hover:text-white"
               >
-                Meet the Founder
-              </a>
+                Portal Login
+              </Link>
             </div>
           </div>
 
