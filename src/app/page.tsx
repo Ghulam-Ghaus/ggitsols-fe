@@ -337,7 +337,7 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white leading-tight">Ghulam Ghaus</h3>
-                  <p className="text-blue-400 text-xs font-bold uppercase tracking-wider mt-1">Founder & CEO</p>
+                  <p className="text-blue-400 text-xs font-bold uppercase tracking-wider mt-1">Co-Founder & CEO</p>
                 </div>
               </div>
 

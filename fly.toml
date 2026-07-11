@@ -6,6 +6,9 @@
 app = 'frontend-plucky-ocean-5046'
 primary_region = 'sin'
 
+[env]
+  HOSTNAME = "0.0.0.0"
+
 [build]
 [http_service]
   internal_port = 3000
