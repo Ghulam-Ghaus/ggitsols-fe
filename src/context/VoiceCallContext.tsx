@@ -31,7 +31,7 @@ export function VoiceCallProvider({ children }: { children: React.ReactNode }) {
   const [isMuted, setIsMuted] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [chatLog, setChatLog] = useState<ChatMessage[]>([
-    { sender: 'agent', text: 'Assalam-o-Alaikum! GG IT Solutions Voice Support is online.' },
+    { sender: 'agent', text: 'Assalam o alikum ma haider hun ma apki madad kesy kr sakta hun, how can i help you today' },
   ]);
   const [interimTranscript, setInterimTranscript] = useState('');
 
@@ -172,7 +172,7 @@ export function VoiceCallProvider({ children }: { children: React.ReactNode }) {
     socket.on('connect', () => {
       setIsConnected(true);
       setStatus('active');
-      setChatLog([{ sender: 'agent', text: 'Assalam-o-Alaikum! Gemini Live Support is connected.' }]);
+      setChatLog([{ sender: 'agent', text: 'Assalam o alikum ma haider hun ma apki madad kesy kr sakta hun, how can i help you today' }]);
       startRecordingStream();
     });
 
@@ -304,7 +304,7 @@ export function VoiceCallProvider({ children }: { children: React.ReactNode }) {
 
     setIsConnected(false);
     setStatus('idle');
-    setChatLog([{ sender: 'agent', text: 'Assalam-o-Alaikum! GG IT Solutions Voice Support is online.' }]);
+    setChatLog([{ sender: 'agent', text: 'Assalam o alikum ma haider hun ma apki madad kesy kr sakta hun, how can i help you today' }]);
     setInterimTranscript('');
   };
 

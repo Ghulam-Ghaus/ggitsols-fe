@@ -58,7 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'User Management', href: '/admin/users', icon: Users },
     { label: 'Role Permissions', href: '/admin/roles', icon: Shield },
     { label: 'Admissions', href: '/admin/admissions', icon: GraduationCap },
-    { label: 'Courses & Batches', href: '/admin/courses', icon: BookOpen, badge: 'Soon' },
+    { label: 'Courses & Batches', href: '/admin/courses', icon: BookOpen },
     { label: 'Attendance', href: '/admin/attendance', icon: Calendar, badge: 'Soon' },
     { label: 'Finance', href: '/admin/finance', icon: DollarSign, badge: 'Soon' },
     { label: 'Settings', href: '/admin/settings', icon: Settings, badge: 'Soon' },

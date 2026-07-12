@@ -17,7 +17,9 @@ import {
   CheckCircle2,
   HelpCircle,
   UserCheck,
-  GitPullRequest
+  GitPullRequest,
+  Briefcase,
+  Award
 } from 'lucide-react';
 
 interface ApplicationDoc {
@@ -43,6 +45,8 @@ interface Application {
   siblingName?: string;
   siblingRegistrationNo?: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  paymentOption?: string;
+  claimFreeFreelancing?: boolean;
   createdAt: string;
   course?: {
     id: string;
@@ -279,6 +283,28 @@ export default function AdminAdmissionsPage() {
                     <span className="text-purple-400 font-semibold">{selectedApp.course?.name || 'N/A'}</span>
                   </div>
                 </div>
+
+                <div className="flex items-start space-x-3">
+                  <Briefcase className="w-4.5 h-4.5 text-slate-500 mt-0.5" />
+                  <div>
+                    <span className="text-slate-500 block">Preferred Payment Option</span>
+                    <span className="text-slate-200 font-semibold">
+                      {selectedApp.paymentOption === 'INSTALLMENT' ? 'Monthly Installment' : 'Full One-time Payment'}
+                    </span>
+                  </div>
+                </div>
+
+                {selectedApp.claimFreeFreelancing && (
+                  <div className="flex items-start space-x-3 bg-purple-500/10 border border-purple-500/20 p-3 rounded-2xl animate-pulse mt-2">
+                    <Award className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-purple-400 font-bold block text-xs">🎁 Free Course Promo Claimed</span>
+                      <span className="text-[10px] text-slate-400 block mt-0.5">
+                        Freelancing & Career Guidance (Eligible with 6-month course)
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Guardian Info */}

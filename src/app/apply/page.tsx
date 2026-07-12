@@ -4,16 +4,16 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import api from '@/lib/axios';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  GraduationCap, 
-  FileText, 
-  Plus, 
-  Trash2, 
-  Send, 
-  CheckCircle, 
+import {
+  User,
+  Mail,
+  Phone,
+  GraduationCap,
+  FileText,
+  Plus,
+  Trash2,
+  Send,
+  CheckCircle,
   AlertCircle,
   ArrowLeft,
   Award,
@@ -24,18 +24,50 @@ import {
   GitPullRequest
 } from 'lucide-react';
 
-const POPULAR_COURSES = [
-  { id: 1, name: 'Full-Stack Web Development (MERN)' },
-  { id: 2, name: 'AI Engineering & Agentic AI Systems' },
-  { id: 3, name: 'Mobile App Development (Flutter & React Native)' },
-  { id: 4, name: 'Cloud Computing & DevOps (Docker, Kubernetes, AWS)' }
-];
+interface Course {
+  id: number;
+  name: string;
+  duration?: string;
+  fee: number;
+}
 
 export default function ApplyPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [courseId, setCourseId] = useState('');
+  const [paymentOption, setPaymentOption] = useState('FULL_PAYMENT');
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [claimFreeFreelancing, setClaimFreeFreelancing] = useState(false);
+
+  React.useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await api.get('/academic/courses');
+        const list = res.data?.data || res.data || [];
+        if (Array.isArray(list) && list.length > 0) {
+          setCourses(list);
+          return;
+        }
+      } catch (err) {
+        console.error('Failed to load courses from API:', err);
+      }
+      // Fallback
+      setCourses([
+        { id: 1, name: 'Web Development', duration: '6 Months', fee: 35000 },
+        { id: 2, name: 'Mobile Development', duration: '6 Months', fee: 35000 },
+        { id: 3, name: 'JavaScript for Interactive Web', duration: '3 Months', fee: 25000 },
+        { id: 4, name: 'Python Programming', duration: '3 Months', fee: 20000 },
+        { id: 5, name: 'SQL Postgres / No SQL Mongo', duration: '3 Months', fee: 25000 },
+        { id: 6, name: 'Generative & Agentic AI', duration: '', fee: 40000 },
+        { id: 7, name: 'Freelancing & Career Guidance', duration: '', fee: 15000 }
+      ]);
+    };
+    fetchCourses();
+  }, []);
+
+  const selectedCourse = courses.find(c => c.id === Number(courseId));
+  const is6MonthCourse = selectedCourse?.duration?.toLowerCase().includes('6 month');
 
   // Parent/Guardian 1 details
   const [guardianName, setGuardianName] = useState('');
@@ -155,6 +187,8 @@ export default function ApplyPage() {
         email,
         phone,
         courseId: courseId ? Number(courseId) : null,
+        paymentOption,
+        claimFreeFreelancing: is6MonthCourse ? claimFreeFreelancing : false,
         guardianName: guardianName.trim() || null,
         guardianRelation: guardianRelation || null,
         guardianPhone: guardianPhone.trim() || null,
@@ -225,7 +259,7 @@ export default function ApplyPage() {
           />
           <span className="font-bold tracking-wide text-sm md:text-base text-slate-300 group-hover:text-white transition-colors">GG IT SOLUTIONS</span>
         </Link>
-        <Link 
+        <Link
           href="/"
           className="text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white flex items-center border border-white/10 hover:border-white/30 rounded-xl px-4 py-2 bg-white/5 transition-all"
         >
@@ -235,7 +269,7 @@ export default function ApplyPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
-        
+
         {/* Info Left Column */}
         <div className="lg:col-span-4 space-y-6">
           <div className="space-y-3">
@@ -256,10 +290,10 @@ export default function ApplyPage() {
               <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 shrink-0">
                 <Award className="w-5 h-5" />
               </div>
-              <div>
-                <h4 className="text-sm font-semibold text-slate-200">Verified Certifications</h4>
+              {/* <div>
+                <h4 className="text-sm font-semibold text-slate-200">Verified Certifications   ---Soon----</h4>
                 <p className="text-xs text-slate-500 mt-1">Acquire professional diplomas recognized by industry hiring managers.</p>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-start space-x-4 bg-slate-900/30 border border-white/5 rounded-2xl p-4">
@@ -300,7 +334,7 @@ export default function ApplyPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              
+
               {/* SECTION 1: APPLICANT INFORMATION */}
               <div className="space-y-4">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-white/5 pb-2">
@@ -375,16 +409,71 @@ export default function ApplyPage() {
                       </span>
                       <select
                         value={courseId}
-                        onChange={(e) => setCourseId(e.target.value)}
+                        onChange={(e) => {
+                          setCourseId(e.target.value);
+                          setClaimFreeFreelancing(false); // Reset on change
+                        }}
                         className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 pl-11 pr-4 text-sm outline-none transition-all appearance-none cursor-pointer"
+                        required
                       >
                         <option value="" className="bg-slate-950">Select course of interest...</option>
-                        {POPULAR_COURSES.map(course => (
-                          <option key={course.id} value={course.id} className="bg-slate-950">
-                            {course.name}
+                        {courses.map(c => (
+                          <option key={c.id} value={c.id} className="bg-slate-950">
+                            {c.name} {c.duration ? `(${c.duration})` : ''}
                           </option>
                         ))}
                       </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 6-Month Special Offer Banner & Checkbox */}
+                {is6MonthCourse && (
+                  <div className="bg-purple-600/10 border border-purple-500/20 rounded-2xl p-4 mt-4 animate-in fade-in duration-200 flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      id="claimFreeFreelancing"
+                      checked={claimFreeFreelancing}
+                      onChange={(e) => setClaimFreeFreelancing(e.target.checked)}
+                      className="w-4.5 h-4.5 rounded border-purple-500/30 bg-slate-950/50 text-purple-500 focus:ring-0 cursor-pointer mt-0.5"
+                    />
+                    <label htmlFor="claimFreeFreelancing" className="text-xs font-semibold text-slate-350 cursor-pointer select-none">
+                      <span className="text-purple-400 font-bold block mb-0.5">🎁 GG IT Solutions Student Benefit</span>
+                      Claim the <strong>Freelancing & Career Guidance</strong> course for <strong>FREE</strong> alongside this 6-month program! (Recommended)
+                    </label>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                      Preferred Payment Plan
+                    </label>
+                    <div className="relative group">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-400 transition-colors">
+                        <Briefcase className="w-4.5 h-4.5" />
+                      </span>
+                      <select
+                        value={paymentOption}
+                        onChange={(e) => setPaymentOption(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 pl-11 pr-4 text-sm outline-none transition-all appearance-none cursor-pointer"
+                        required
+                      >
+                        <option value="FULL_PAYMENT" className="bg-slate-950">Full One-time Payment (5% to 10% Discount)</option>
+                        <option value="INSTALLMENT" className="bg-slate-950">Monthly Installment Plan</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <div className="bg-blue-600/5 border border-blue-500/20 rounded-2xl p-4 text-xs text-slate-400 flex items-start space-x-3 w-full mt-4 md:mt-0">
+                      <Award className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-bold text-white block">Flexible Payment & Discount Terms</span>
+                        <span className="mt-0.5 block leading-relaxed">
+                          Selecting <strong>Full One-time Payment</strong> triggers a flexible <strong>5% to 10% discount</strong> on overall tuition. Installment plans are billed and paid monthly.
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

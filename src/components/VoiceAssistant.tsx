@@ -18,7 +18,7 @@ export default function VoiceAssistant() {
   } = useVoiceCall();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
   // Canvas visualizer draw loop using the shared layout context AnalyserNode
@@ -97,9 +97,14 @@ export default function VoiceAssistant() {
     return `${m}:${s}`;
   };
 
-  // Scroll chat subtitles to bottom
+  // Scroll chat subtitles to bottom within the container (not the viewport)
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [chatLog, interimTranscript]);
 
   return (
@@ -189,7 +194,10 @@ export default function VoiceAssistant() {
           </div>
 
           {/* Subtitle / Chat Transcript display inside call panel */}
-          <div className="flex-1 max-h-[140px] min-h-[100px] overflow-y-auto bg-slate-950/40 rounded-2xl border border-white/5 p-3 flex flex-col space-y-2">
+          <div 
+            ref={chatContainerRef}
+            className="flex-1 max-h-[140px] min-h-[100px] overflow-y-auto bg-slate-950/40 rounded-2xl border border-white/5 p-3 flex flex-col space-y-2"
+          >
             {chatLog.slice(-3).map((chat, idx) => (
               <p
                 key={idx}
@@ -208,7 +216,6 @@ export default function VoiceAssistant() {
                 {interimTranscript}...
               </p>
             )}
-            <div ref={chatEndRef} />
           </div>
 
           {/* Audio Waveform Canvas */}

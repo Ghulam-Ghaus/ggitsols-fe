@@ -19,7 +19,9 @@ import {
   Brain,
   ArrowRight,
   Monitor,
-  Smartphone
+  Smartphone,
+  Briefcase,
+  Database
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -67,7 +69,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section with Flyer Full Background */}
-      <section id="hero" className="relative min-h-[85vh] flex items-center justify-center py-20 px-6 overflow-hidden">
+      <section id="hero" className="scroll-mt-20 relative min-h-[85vh] flex items-center justify-center py-20 px-6 overflow-hidden">
         {/* Full Background Video with dark overlay */}
         <div className="absolute inset-0 z-0">
           <video
@@ -131,7 +133,7 @@ export default function LandingPage() {
       </section>
 
       {/* Main Founder Feature Card (Full Screen Grid: Image Left, Details Right) */}
-      <section id="about" className="py-20 px-6 bg-slate-950 relative">
+      <section id="about" className="scroll-mt-20 py-20 px-6 bg-slate-950 relative">
         <div className="max-w-6xl w-full mx-auto">
           <div className="flex flex-col items-center mb-12 text-center">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-blue-400">Leadership Spotlight</h2>
@@ -187,7 +189,7 @@ export default function LandingPage() {
                   </div>
                   <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
                     <Phone className="w-5 h-5 text-purple-400 shrink-0" />
-                    <span>+92 306 7956164 / +92 302 0655044</span>
+                    <span>+92 306 7956164 </span>
                   </div>
                   <div className="flex items-center space-x-3 text-sm text-slate-400 bg-slate-950/40 border border-white/5 rounded-xl p-3">
                     <MapPin className="w-5 h-5 text-pink-400 shrink-0" />
@@ -241,7 +243,7 @@ export default function LandingPage() {
       </section>
 
       {/* Main Co-Founder Feature Card (Full Screen Grid: Image Left, Details Right) */}
-      <section id="co-founder" className="py-20 px-6 bg-slate-900/10 border-t border-white/5 relative">
+      <section id="co-founder" className="scroll-mt-20 py-20 px-6 bg-slate-900/10 border-t border-white/5 relative">
         <div className="max-w-6xl w-full mx-auto">
           <div className="flex flex-col items-center mb-12 text-center">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-purple-400">Leadership Spotlight</h2>
@@ -322,7 +324,7 @@ export default function LandingPage() {
       </section>
 
       {/* Engineering Team Section */}
-      <section id="team" className="py-20 px-6 bg-slate-950 border-t border-white/5 relative">
+      <section id="team" className="scroll-mt-20 py-20 px-6 bg-slate-950 border-t border-white/5 relative">
         <div className="max-w-6xl w-full mx-auto">
           <div className="flex flex-col items-center mb-12 text-center">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-blue-400">Team Structure</h2>
@@ -441,7 +443,7 @@ export default function LandingPage() {
       </section>
 
       {/* Courses Offered Section (Directly from Flyer) */}
-      <section id="courses" className="py-20 px-6 bg-slate-950 border-t border-white/5">
+      <section id="courses" className="scroll-mt-20 py-20 px-6 bg-slate-950 border-t border-white/5">
         <div className="max-w-6xl w-full mx-auto">
           <div className="flex flex-col items-center mb-16 text-center">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-blue-400">Academics</h2>
@@ -452,91 +454,135 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Course 1 */}
-            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-blue-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
-              <div>
+            {/* Course 1: Web Development */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-blue-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute top-0 right-0 bg-blue-600 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl-xl shadow-md">
+                6 Months
+              </div>
+              <div className="mt-2">
                 <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 mb-4 font-bold">
                   <Monitor className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Web Development</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Full stack training covering structural layout and presentation layers using HTML, CSS, JavaScript, React, and Node.
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Master modern web architectures. Learn structured semantic markups, responsive designs, node backends, and full stack application deployments.
                 </p>
               </div>
-              <span className="text-xs font-semibold text-blue-400">HTML, CSS, JS, Node, React</span>
+              <span className="text-[11px] font-semibold text-blue-400 border-t border-white/5 pt-3 mt-2">
+                HTML5, CSS3, JavaScript (ES6), React, Node.js
+              </span>
             </div>
 
-            {/* Course 6 */}
-            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-emerald-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
-              <div>
+            {/* Course 2: Mobile Development */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-emerald-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute top-0 right-0 bg-emerald-600 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl-xl shadow-md">
+                6 Months
+              </div>
+              <div className="mt-2">
                 <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4 font-bold">
                   <Smartphone className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Mobile Development</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Build cross-platform mobile apps for iOS and Android using React Native and Flutter, with device feature integrations and store publishing.
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Build cross-platform mobile apps for iOS and Android using React Native and Flutter. Covers native features, state management, and app store deployment.
                 </p>
               </div>
-              <span className="text-xs font-semibold text-emerald-400">React Native, Flutter, iOS, Android</span>
+              <span className="text-[11px] font-semibold text-emerald-400 border-t border-white/5 pt-3 mt-2">
+                React Native, Flutter, Native APIs, Store Publishing
+              </span>
             </div>
 
-            {/* Course 2 */}
-            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-purple-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 font-bold">
-                  <Server className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Python Programming</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Go from absolute beginner to advanced concepts in Python, focusing on algorithms, object-oriented concepts, and data parsing.
-                </p>
+            {/* Course 3: JavaScript */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-amber-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute top-0 right-0 bg-amber-600 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl-xl shadow-md">
+                3 Months
               </div>
-              <span className="text-xs font-semibold text-purple-400">Beginner to Advanced</span>
-            </div>
-
-            {/* Course 3 */}
-            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-pink-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-400 mb-4 font-bold">
-                  <Brain className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Generative & Agentic AI</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Advanced models, custom voice pipelines, autonomous agents, contents creation workflow, and automation setups.
-                </p>
-              </div>
-              <span className="text-xs font-semibold text-pink-400">Cutting-edge Tech</span>
-            </div>
-
-            {/* Course 4 */}
-            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-amber-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
-              <div>
+              <div className="mt-2">
                 <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4 font-bold">
                   <Code className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">JavaScript for Interactive Web</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Detailed frontend client interfaces and server-side logic utilizing Node.js, Express, and databases.
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Go deep into JavaScript (ES6). Master asynchronous scripting, DOM API bindings, AJAX data fetching, and object-oriented architectures.
                 </p>
               </div>
-              <span className="text-xs font-semibold text-amber-400">Frontend & Backend</span>
+              <span className="text-[11px] font-semibold text-amber-400 border-t border-white/5 pt-3 mt-2">
+                ES6 Constructs, Web APIs, OOP, Async/Await
+              </span>
             </div>
 
-            {/* Course 5 */}
-            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-teal-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-400 mb-4 font-bold">
-                  <BookOpen className="w-5 h-5" />
+            {/* Course 4: Python */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-purple-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute top-0 right-0 bg-purple-600 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl-xl shadow-md">
+                3 Months
+              </div>
+              <div className="mt-2">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 font-bold">
+                  <Server className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Freelancing & Career Guidance</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                  Learn to bid on platforms like Upwork/Fiverr, build portfolio assets, construct professional CVs, and crack technical interviews.
+                <h3 className="text-lg font-bold text-white mb-2">Python Programming</h3>
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Comprehensive fundamentals to advanced algorithms. Covers data structures, object-oriented concepts, file handling, and server scripting.
                 </p>
               </div>
-              <span className="text-xs font-semibold text-teal-400">Freelancing & Jobs</span>
+              <span className="text-[11px] font-semibold text-purple-400 border-t border-white/5 pt-3 mt-2">
+                OOP syntax, Data Parsing, Scripting, Algorithms
+              </span>
             </div>
 
+            {/* Course 5: SQL/NoSQL */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-teal-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute top-0 right-0 bg-teal-600 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl-xl shadow-md">
+                3 Months
+              </div>
+              <div className="mt-2">
+                <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-400 mb-4 font-bold">
+                  <Database className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">SQL Postgres / No SQL Mongo</h3>
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Master database designs. Write complex SQL joins, index optimizations, transaction handles in PostgreSQL, and document queries in MongoDB.
+                </p>
+              </div>
+              <span className="text-[11px] font-semibold text-teal-400 border-t border-white/5 pt-3 mt-2">
+                PostgreSQL, MongoDB, Relational Mapping, Queries
+              </span>
+            </div>
 
+            {/* Course 6: Generative & Agentic AI */}
+            <div className="bg-slate-900/20 border border-white/5 rounded-2xl p-6 hover:border-pink-500/20 hover:bg-slate-900/30 transition-all flex flex-col justify-between relative overflow-hidden group">
+              <div className="mt-2">
+                <div className="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-400 mb-4 font-bold">
+                  <Brain className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Generative & Agentic AI</h3>
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Learn to design, deploy, and scale autonomous AI systems. Topics cover advanced LLMs, custom TTS/STT real-time voice pipelines, automated agents, and workflow systems.
+                </p>
+              </div>
+              <span className="text-[11px] font-semibold text-pink-400 border-t border-white/5 pt-3 mt-2">
+                Deepgram, Gemini API, AI Agentic Workflows
+              </span>
+            </div>
+
+            {/* Course 7: Freelancing & Career */}
+            <div className="bg-slate-900/20 border border-white/10 hover:border-purple-500/30 bg-purple-500/5 rounded-2xl p-6 transition-all flex flex-col justify-between relative overflow-hidden group col-span-1 md:col-span-2 lg:col-span-3 max-w-2xl mx-auto w-full">
+              <div className="absolute top-0 right-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-[9px] uppercase tracking-widest px-4 py-1.5 rounded-bl-xl shadow-md">
+                FREE WITH 6-MONTH COURSES!
+              </div>
+              <div className="mt-2">
+                <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-purple-400 mb-4 font-bold border border-purple-500/30">
+                  <Briefcase className="w-5 h-5" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Freelancing & Career Guidance</h3>
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Gain complete guidance on Upwork & Fiverr bidding strategies, portfolio construction, CV formatting, and cracking remote technical interviews.
+                </p>
+              </div>
+              <span className="text-[11px] font-semibold text-purple-400 border-t border-purple-500/10 pt-3 mt-2 block">
+                Upwork, Fiverr, Remote Jobs, Professional Portfolios, Mock Interviews
+              </span>
+            </div>
           </div>
         </div>
       </section>

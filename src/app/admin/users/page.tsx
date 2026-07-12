@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import api from '@/lib/axios';
 import { 
   Users, 
@@ -427,6 +428,15 @@ export default function UserManagement() {
                     {/* Action buttons */}
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end space-x-2">
+                        {u.role?.name === 'STUDENT' && (
+                          <Link
+                            href={`/admin/students/${u.id}`}
+                            className="p-1.5 bg-slate-950/80 hover:bg-blue-600/20 border border-white/5 hover:border-blue-500/30 text-slate-400 hover:text-blue-300 rounded-lg transition-all cursor-pointer"
+                            title="View Academic Record & Performance"
+                          >
+                            <Users className="w-4 h-4" />
+                          </Link>
+                        )}
                         <button
                           onClick={() => openEditModal(u)}
                           className="p-1.5 bg-slate-950/80 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/30 text-slate-400 hover:text-purple-300 rounded-lg transition-all cursor-pointer"
