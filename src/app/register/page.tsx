@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [roleId, setRoleId] = useState<number>(3); // Default to STUDENT (id: 3)
+  const [roleId, setRoleId] = useState<number>(4); // Default to PARENT (id: 4)
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -202,11 +202,19 @@ export default function RegisterPage() {
                   onChange={(e) => setRoleId(Number(e.target.value))}
                   className="w-full bg-slate-950/50 border border-white/5 focus:border-purple-500/60 focus:ring-1 focus:ring-purple-500/30 rounded-xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 outline-none transition-all"
                 >
-                  <option value={3} className="bg-slate-950 text-slate-100">Student</option>
                   <option value={4} className="bg-slate-950 text-slate-100">Parent</option>
                   <option value={5} className="bg-slate-950 text-slate-100">Applicant</option>
                 </select>
               </div>
+            </div>
+
+            {/* Info notice about student registration restrictions */}
+            <div className="bg-blue-500/10 border border-blue-500/20 text-blue-200 text-xs rounded-xl p-3.5 leading-relaxed">
+              <strong className="text-blue-400 block mb-1">Student Signup Notice:</strong>
+              Students cannot sign up directly. A student account is automatically provisioned only after submitting an official admission application. 
+              <Link href="/apply" className="text-purple-400 hover:text-purple-300 font-bold ml-1 hover:underline">
+                Apply for Admission here →
+              </Link>
             </div>
 
             <button

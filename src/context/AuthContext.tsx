@@ -116,6 +116,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (decoded?.role === 'ADMIN') {
         router.push('/admin');
+      } else if (decoded?.role === 'STUDENT') {
+        router.push('/profile/academic');
       } else {
         router.push('/profile');
       }

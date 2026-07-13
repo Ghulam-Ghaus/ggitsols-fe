@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { VoiceCallProvider } from "@/context/VoiceCallContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import GlobalVoiceWidget from "@/components/GlobalVoiceWidget";
 
 const geistSans = Geist({
@@ -29,14 +30,39 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
-        <AuthProvider>
-          <VoiceCallProvider>
-            {children}
-            <GlobalVoiceWidget />
-          </VoiceCallProvider>
-        </AuthProvider>
+      <head>
+        {/* Anti-FOUC theme initialization script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const savedTheme = localStorage.getItem('theme');
+                  const theme = savedTheme || 'dark';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                  } else {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+        <ThemeProvider>
+          <AuthProvider>
+            <VoiceCallProvider>
+              {children}
+              <GlobalVoiceWidget />
+            </VoiceCallProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

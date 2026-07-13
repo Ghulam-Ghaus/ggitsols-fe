@@ -58,6 +58,30 @@ export default function AdminCoursesAndBatchesPage() {
   const [activeTab, setActiveTab] = useState<'courses' | 'batches'>('courses');
   const [courses, setCourses] = useState<Course[]>([]);
   const [batches, setBatches] = useState<Batch[]>([]);
+
+  // Courses pagination state
+  const [coursePage, setCoursePage] = useState(1);
+  const [coursePageSize, setCoursePageSize] = useState(10);
+
+  // Batches pagination state
+  const [batchPage, setBatchPage] = useState(1);
+  const [batchPageSize, setBatchPageSize] = useState(10);
+
+  // Reset page on length changes
+  useEffect(() => {
+    setCoursePage(1);
+    setBatchPage(1);
+  }, [courses.length, batches.length]);
+
+  const paginatedCourses = courses.slice(
+    (coursePage - 1) * coursePageSize,
+    coursePage * coursePageSize
+  );
+
+  const paginatedBatches = batches.slice(
+    (batchPage - 1) * batchPageSize,
+    batchPage * batchPageSize
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -426,19 +450,20 @@ export default function AdminCoursesAndBatchesPage() {
         /* ==========================================
            COURSES VIEW
            ========================================== */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.length === 0 ? (
-            <div className="col-span-full text-center py-20 bg-slate-900/20 border border-white/5 rounded-3xl space-y-2">
-              <p className="text-slate-400 text-sm">No courses defined yet.</p>
-              <button 
-                onClick={handleOpenCourseCreate} 
-                className="text-xs text-blue-400 hover:underline font-semibold"
-              >
-                Create your first course now
-              </button>
-            </div>
-          ) : (
-            courses.map(course => (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.length === 0 ? (
+              <div className="col-span-full text-center py-20 bg-slate-900/20 border border-white/5 rounded-3xl space-y-2">
+                <p className="text-slate-400 text-sm">No courses defined yet.</p>
+                <button 
+                  onClick={handleOpenCourseCreate} 
+                  className="text-xs text-blue-400 hover:underline font-semibold"
+                >
+                  Create your first course now
+                </button>
+              </div>
+            ) : (
+              paginatedCourses.map(course => (
               <div 
                 key={course.id}
                 className="bg-slate-900/40 backdrop-blur-xl border border-white/5 hover:border-blue-500/20 rounded-3xl p-6 flex flex-col justify-between shadow-xl transition-all group"
@@ -501,27 +526,73 @@ export default function AdminCoursesAndBatchesPage() {
                   </button>
                 </div>
               </div>
-            ))
+              ))
+            )}
+          </div>
+
+          {/* Courses Pagination Controls */}
+          {courses.length > 0 && (
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between p-5 bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-2xl gap-4 text-xs text-slate-500 dark:text-slate-400 shadow-md">
+              <div className="flex items-center space-x-2">
+                <span>Show</span>
+                <select
+                  value={coursePageSize}
+                  onChange={(e) => setCoursePageSize(Number(e.target.value))}
+                  className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 rounded-lg py-1.5 px-2.5 text-xs text-slate-600 dark:text-slate-300 outline-none cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>courses per page</span>
+              </div>
+
+              <div className="font-medium text-slate-600 dark:text-slate-400">
+                Showing {Math.min(courses.length, (coursePage - 1) * coursePageSize + 1)} to {Math.min(courses.length, coursePage * coursePageSize)} of {courses.length} courses
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setCoursePage(prev => Math.max(1, prev - 1))}
+                  disabled={coursePage === 1}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Previous
+                </button>
+                <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 font-bold font-mono">
+                  {coursePage}
+                </span>
+                <button
+                  onClick={() => setCoursePage(prev => Math.min(Math.ceil(courses.length / coursePageSize), prev + 1))}
+                  disabled={coursePage >= Math.ceil(courses.length / coursePageSize)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           )}
-        </div>
+        </>
       ) : (
         /* ==========================================
            BATCHES VIEW
            ========================================== */
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {batches.length === 0 ? (
-            <div className="col-span-full text-center py-20 bg-slate-900/20 border border-white/5 rounded-3xl space-y-2">
-              <p className="text-slate-400 text-sm">No batches created yet.</p>
-              <button 
-                onClick={handleOpenBatchCreate} 
-                className="text-xs text-blue-400 hover:underline font-semibold"
-                disabled={courses.length === 0}
-              >
-                Create your first batch cohort now
-              </button>
-            </div>
-          ) : (
-            batches.map(batch => (
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {batches.length === 0 ? (
+              <div className="col-span-full text-center py-20 bg-slate-900/20 border border-white/5 rounded-3xl space-y-2">
+                <p className="text-slate-400 text-sm">No batches created yet.</p>
+                <button 
+                  onClick={handleOpenBatchCreate} 
+                  className="text-xs text-blue-400 hover:underline font-semibold"
+                  disabled={courses.length === 0}
+                >
+                  Create your first batch cohort now
+                </button>
+              </div>
+            ) : (
+              paginatedBatches.map(batch => (
               <div 
                 key={batch.id}
                 className="bg-slate-900/40 backdrop-blur-xl border border-white/5 hover:border-purple-500/20 rounded-3xl p-6 flex flex-col justify-between shadow-xl transition-all group"
@@ -600,9 +671,54 @@ export default function AdminCoursesAndBatchesPage() {
                   </div>
                 </div>
               </div>
-            ))
+              ))
+            )}
+          </div>
+
+          {/* Batches Pagination Controls */}
+          {batches.length > 0 && (
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between p-5 bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-2xl gap-4 text-xs text-slate-500 dark:text-slate-400 shadow-md">
+              <div className="flex items-center space-x-2">
+                <span>Show</span>
+                <select
+                  value={batchPageSize}
+                  onChange={(e) => setBatchPageSize(Number(e.target.value))}
+                  className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 rounded-lg py-1.5 px-2.5 text-xs text-slate-600 dark:text-slate-300 outline-none cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>batches per page</span>
+              </div>
+
+              <div className="font-medium text-slate-600 dark:text-slate-400">
+                Showing {Math.min(batches.length, (batchPage - 1) * batchPageSize + 1)} to {Math.min(batches.length, batchPage * batchPageSize)} of {batches.length} batches
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setBatchPage(prev => Math.max(1, prev - 1))}
+                  disabled={batchPage === 1}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Previous
+                </button>
+                <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 font-bold font-mono">
+                  {batchPage}
+                </span>
+                <button
+                  onClick={() => setBatchPage(prev => Math.min(Math.ceil(batches.length / batchPageSize), prev + 1))}
+                  disabled={batchPage >= Math.ceil(batches.length / batchPageSize)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           )}
-        </div>
+        </>
       )}
 
       {/* ==========================================

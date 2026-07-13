@@ -21,7 +21,8 @@ import {
   Briefcase,
   BookOpen,
   UserCheck,
-  GitPullRequest
+  GitPullRequest,
+  Lock
 } from 'lucide-react';
 
 interface Course {
@@ -39,6 +40,14 @@ export default function ApplyPage() {
   const [paymentOption, setPaymentOption] = useState('FULL_PAYMENT');
   const [courses, setCourses] = useState<Course[]>([]);
   const [claimFreeFreelancing, setClaimFreeFreelancing] = useState(false);
+
+  // Education Details state
+  const [highestQualification, setHighestQualification] = useState('');
+  const [institutionName, setInstitutionName] = useState('');
+  const [boardUniversity, setBoardUniversity] = useState('');
+  const [completionYear, setCompletionYear] = useState('');
+  const [obtainedGpa, setObtainedGpa] = useState('');
+  const [password, setPassword] = useState('');
 
   React.useEffect(() => {
     const fetchCourses = async () => {
@@ -200,6 +209,12 @@ export default function ApplyPage() {
         hasSibling,
         siblingName: hasSibling ? siblingName.trim() : null,
         siblingRegistrationNo: hasSibling ? siblingRegistrationNo.trim() : null,
+        highestQualification: highestQualification.trim() || null,
+        institutionName: institutionName.trim() || null,
+        boardUniversity: boardUniversity.trim() || null,
+        completionYear: completionYear ? Number(completionYear) : null,
+        obtainedGpa: obtainedGpa.trim() || null,
+        password: password.trim() || null,
         documents: validDocuments
       });
 
@@ -395,6 +410,7 @@ export default function ApplyPage() {
                         onChange={(e) => setPhone(e.target.value)}
                         className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 pl-11 pr-4 text-sm outline-none transition-all"
                         placeholder="+92 300 1234567"
+                        autoComplete="tel"
                       />
                     </div>
                   </div>
@@ -425,6 +441,26 @@ export default function ApplyPage() {
                       </select>
                     </div>
                   </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                      Create Portal Password * (For student login after approval)
+                    </label>
+                    <div className="relative group">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-400 transition-colors">
+                        <Lock className="w-4.5 h-4.5" />
+                      </span>
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 pl-11 pr-4 text-sm outline-none transition-all"
+                        placeholder="••••••••"
+                        required
+                        minLength={6}
+                        autoComplete="new-password"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* 6-Month Special Offer Banner & Checkbox */}
@@ -443,6 +479,90 @@ export default function ApplyPage() {
                     </label>
                   </div>
                 )}
+
+                {/* Last Education Section */}
+                <div className="border-t border-white/5 pt-6 mt-6">
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center">
+                    <GraduationCap className="w-4 h-4 text-purple-400 mr-2" />
+                    Last Academic Education Details
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        Highest Qualification / Degree *
+                      </label>
+                      <input
+                        type="text"
+                        value={highestQualification}
+                        onChange={(e) => setHighestQualification(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
+                        placeholder="e.g. Matric / FSc / BS CS"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        Obtained Grade / Percentage / GPA *
+                      </label>
+                      <input
+                        type="text"
+                        value={obtainedGpa}
+                        onChange={(e) => setObtainedGpa(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
+                        placeholder="e.g. A+ / 85% / 3.7"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        School / College / University *
+                      </label>
+                      <input
+                        type="text"
+                        value={institutionName}
+                        onChange={(e) => setInstitutionName(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
+                        placeholder="e.g. Punjab Group of Colleges"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        Board / University *
+                      </label>
+                      <input
+                        type="text"
+                        value={boardUniversity}
+                        onChange={(e) => setBoardUniversity(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
+                        placeholder="e.g. BISE Lahore / HEC"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        Year of Completion *
+                      </label>
+                      <input
+                        type="number"
+                        value={completionYear}
+                        onChange={(e) => setCompletionYear(e.target.value)}
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
+                        placeholder="e.g. 2025"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>

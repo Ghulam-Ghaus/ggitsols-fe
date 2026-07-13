@@ -142,13 +142,22 @@ export default function ProfilePage() {
                 {user.role?.name || 'STUDENT'}
               </div>
               {user.role?.name === 'STUDENT' && (
-                <Link
-                  href="/profile/quizzes"
-                  className="mt-4 flex items-center justify-center text-xs font-semibold uppercase tracking-wider text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 rounded-xl px-4 py-2 transition-all w-full"
-                >
-                  <BookOpen className="w-3.5 h-3.5 mr-2" />
-                  My AI Quizzes
-                </Link>
+                <>
+                  <Link
+                    href="/profile/quizzes"
+                    className="mt-4 flex items-center justify-center text-xs font-semibold uppercase tracking-wider text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 rounded-xl px-4 py-2 transition-all w-full"
+                  >
+                    <BookOpen className="w-3.5 h-3.5 mr-2" />
+                    My AI Quizzes
+                  </Link>
+                  <Link
+                    href="/profile/academic"
+                    className="mt-2.5 flex items-center justify-center text-xs font-semibold uppercase tracking-wider text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl px-4 py-2 transition-all w-full"
+                  >
+                    <User className="w-3.5 h-3.5 mr-2" />
+                    Academic Dossier & Grades
+                  </Link>
+                </>
               )}
               {user?.role?.name === 'ADMIN' && (
                 <Link

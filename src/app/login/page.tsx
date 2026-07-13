@@ -18,6 +18,8 @@ export default function LoginPage() {
     if (isAuthenticated && user) {
       if (user.role?.name === 'ADMIN') {
         router.push('/admin');
+      } else if (user.role?.name === 'STUDENT') {
+        router.push('/profile/academic');
       } else {
         router.push('/profile');
       }

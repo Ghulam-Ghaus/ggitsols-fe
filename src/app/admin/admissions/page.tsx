@@ -47,6 +47,11 @@ interface Application {
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   paymentOption?: string;
   claimFreeFreelancing?: boolean;
+  highestQualification?: string;
+  institutionName?: string;
+  boardUniversity?: string;
+  completionYear?: number;
+  obtainedGpa?: string;
   createdAt: string;
   course?: {
     id: string;
@@ -62,6 +67,15 @@ export default function AdminAdmissionsPage() {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const paginatedApplications = applications.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   // Concurrency guard to prevent StrictMode double fetches in dev
   const isFetching = useRef(false);
@@ -161,8 +175,9 @@ export default function AdminAdmissionsPage() {
               <p className="text-slate-500 text-xs">Pending student applications will appear here.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-white/5 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-900/20">
                     <th className="px-6 py-4">Applicant</th>
@@ -173,7 +188,7 @@ export default function AdminAdmissionsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 text-sm text-slate-300">
-                  {applications.map((app) => (
+                  {paginatedApplications.map((app) => (
                     <tr 
                       key={app.id} 
                       onClick={() => setSelectedApp(app)}
@@ -238,8 +253,53 @@ export default function AdminAdmissionsPage() {
                 </tbody>
               </table>
             </div>
+
+          {/* Pagination Controls */}
+          {applications.length > 0 && !loading && (
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-900/20 border-t border-slate-200 dark:border-white/5 gap-4 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center space-x-2">
+                <span>Show</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}
+                  className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 rounded-lg py-1.5 px-2.5 text-xs text-slate-600 dark:text-slate-300 outline-none cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>records per page</span>
+              </div>
+
+              <div className="font-medium text-slate-600 dark:text-slate-400">
+                Showing {Math.min(applications.length, (currentPage - 1) * pageSize + 1)} to {Math.min(applications.length, currentPage * pageSize)} of {applications.length} entries
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Previous
+                </button>
+                <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 font-bold font-mono">
+                  {currentPage}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(applications.length / pageSize), prev + 1))}
+                  disabled={currentPage >= Math.ceil(applications.length / pageSize)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           )}
-        </div>
+        </>
+      )}
+    </div>
 
         {/* Application Details Right Column */}
         <div className="lg:col-span-4">
@@ -306,6 +366,21 @@ export default function AdminAdmissionsPage() {
                   </div>
                 )}
               </div>
+
+              {/* Last Education Details */}
+              {selectedApp.highestQualification && (
+                <div className="border-t border-white/5 pt-4 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                    <GraduationCap className="w-4 h-4 text-purple-400 mr-2" />
+                    Last Academic Education
+                  </h4>
+                  <div className="bg-slate-950/40 p-4 border border-white/5 rounded-2xl text-xs space-y-2">
+                    <p><span className="text-slate-500">Degree / Certificate:</span> <span className="text-slate-200 font-semibold">{selectedApp.highestQualification}</span></p>
+                    <p><span className="text-slate-500">School / College:</span> <span className="text-slate-200 font-semibold">{selectedApp.institutionName} ({selectedApp.boardUniversity})</span></p>
+                    <p><span className="text-slate-500">Year / Grade:</span> <span className="text-slate-200 font-semibold">Class of {selectedApp.completionYear} — GPA/Marks: {selectedApp.obtainedGpa}</span></p>
+                  </div>
+                </div>
+              )}
 
               {/* Guardian Info */}
               {selectedApp.guardianName && (

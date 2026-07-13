@@ -58,6 +58,15 @@ export default function UserManagement() {
   const [roleFilter, setRoleFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset pagination on filter change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, roleFilter, statusFilter]);
+
   // Modals state
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -239,6 +248,11 @@ export default function UserManagement() {
     return searchMatch && roleMatch && statusMatch;
   });
 
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       
@@ -352,7 +366,7 @@ export default function UserManagement() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 text-xs text-slate-300">
-                {filteredUsers.map((u) => (
+                {paginatedUsers.map((u) => (
                   <tr key={u.id} className="hover:bg-white/[0.01] transition-colors">
                     {/* Name & ID */}
                     <td className="py-4 px-6">
@@ -458,6 +472,50 @@ export default function UserManagement() {
                 ))}
               </tbody>
             </table>
+          )}
+          
+          {/* Pagination Controls */}
+          {filteredUsers.length > 0 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-900/20 border-t border-slate-200 dark:border-white/5 gap-4 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center space-x-2">
+                <span>Show</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}
+                  className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 rounded-lg py-1.5 px-2.5 text-xs text-slate-600 dark:text-slate-300 outline-none cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>records per page</span>
+              </div>
+
+              <div className="font-medium text-slate-600 dark:text-slate-400">
+                Showing {Math.min(filteredUsers.length, (currentPage - 1) * pageSize + 1)} to {Math.min(filteredUsers.length, currentPage * pageSize)} of {filteredUsers.length} entries
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Previous
+                </button>
+                <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 font-bold font-mono">
+                  {currentPage}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredUsers.length / pageSize), prev + 1))}
+                  disabled={currentPage >= Math.ceil(filteredUsers.length / pageSize)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all cursor-pointer font-bold"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
