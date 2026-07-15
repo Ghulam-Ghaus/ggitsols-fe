@@ -8,8 +8,11 @@ primary_region = 'sin'
 
 [env]
   HOSTNAME = "0.0.0.0"
+  NEXT_PUBLIC_API_URL = "https://backend-blue-raindrop-2736.fly.dev"
 
 [build]
+  [build.args]
+    NEXT_PUBLIC_API_URL = "https://backend-blue-raindrop-2736.fly.dev"
 [http_service]
   internal_port = 3000
   force_https = true
