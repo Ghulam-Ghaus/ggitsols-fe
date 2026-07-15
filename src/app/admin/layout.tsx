@@ -72,7 +72,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  const menuItems = [
+  interface AdminMenuItem {
+    label: string;
+    href: string;
+    icon: any;
+    children?: { label: string; href: string }[];
+    badge?: string;
+  }
+
+  const menuItems: AdminMenuItem[] = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { 
       label: 'User Management', 
@@ -86,9 +94,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Role Permissions', href: '/admin/roles', icon: Shield },
     { label: 'Admissions', href: '/admin/admissions', icon: GraduationCap },
     { label: 'Courses & Batches', href: '/admin/courses', icon: BookOpen },
-    { label: 'Attendance', href: '/admin/attendance', icon: Calendar, badge: 'Soon' },
-    { label: 'Finance', href: '/admin/finance', icon: DollarSign, badge: 'Soon' },
-    { label: 'Settings', href: '/admin/settings', icon: Settings, badge: 'Soon' },
+    { label: 'Attendance', href: '/admin/attendance', icon: Calendar },
+    { label: 'Finance', href: '/admin/finance', icon: DollarSign },
+    { label: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
   return (
