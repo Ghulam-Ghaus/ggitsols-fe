@@ -16,7 +16,11 @@ export default function ProfileRedirectPage() {
         if (user.role?.name === 'STUDENT') {
           router.replace('/profile/academic');
         } else if (user.role?.name === 'ADMIN') {
-          router.replace('/admin/settings');
+          router.replace('/admin');
+        } else if (user.role?.name === 'TEACHER') {
+          router.replace('/profile/teacher');
+        } else if (user.role?.name === 'PARENT') {
+          router.replace('/profile/parent');
         } else {
           router.replace('/');
         }

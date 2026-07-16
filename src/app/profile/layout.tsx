@@ -37,6 +37,15 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
       { label: 'My AI Quizzes', href: '/profile/quizzes', icon: BookOpen },
       { label: 'My Attendance', href: '/profile/attendance', icon: Calendar },
       { label: 'Fees & Invoices', href: '/profile/finance', icon: DollarSign }
+    ] : user.role?.name === 'TEACHER' ? [
+      { label: 'Teacher Dashboard', href: '/profile/teacher', icon: User },
+      { label: 'Batch Attendance', href: '/profile/teacher/attendance', icon: Calendar },
+      { label: 'My Salaries', href: '/profile/teacher/finance', icon: DollarSign }
+    ] : user.role?.name === 'PARENT' ? [
+      { label: 'Parent Dashboard', href: '/profile/parent', icon: User },
+      { label: 'Child Attendance', href: '/profile/parent/attendance', icon: Calendar },
+      { label: 'Child Grades', href: '/profile/parent/academic', icon: Award },
+      { label: 'Child Fees', href: '/profile/parent/finance', icon: DollarSign }
     ] : [
       { label: 'My Profile', href: '/profile', icon: User }
     ])

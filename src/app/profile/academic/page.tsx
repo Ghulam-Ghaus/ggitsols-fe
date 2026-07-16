@@ -165,33 +165,17 @@ export default function StudentViewOnlyAcademicDashboard() {
   const labsCount = labs.length;
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-100 flex flex-col">
-      {/* Header Navbar */}
-      <header className="border-b border-white/5 bg-slate-900/20 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <Link
-            href="/profile"
-            className="flex items-center text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white bg-slate-900/40 border border-white/5 rounded-xl px-4 py-2.5 transition-all"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Dashboard
-          </Link>
-        </div>
-        <div className="flex items-center space-x-3">
-          <Link
-            href="/"
-            className="flex items-center text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-white bg-slate-800/40 hover:bg-slate-800/80 border border-white/10 rounded-xl px-4 py-2.5 transition-all"
-          >
-            <Globe className="w-4 h-4 mr-2" />
-            Website
-          </Link>
-        </div>
-      </header>
+    <div className="space-y-6 animate-in fade-in duration-200">
+      
+      {/* Title */}
+      <div>
+        <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">Academic Dossier</span>
+        <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+          My Academic Profile & Grades
+        </h1>
+      </div>
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-5xl w-full mx-auto p-6 md:p-8 space-y-8 pb-16">
-        
-        {/* Banner Card */}
+      {/* Banner Card */}
         <section className="relative overflow-hidden bg-gradient-to-r from-slate-900/60 to-slate-900/30 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
           <div className="absolute top-0 right-0 w-80 h-80 bg-purple-600/5 rounded-full blur-[100px] pointer-events-none"></div>
           
@@ -671,12 +655,9 @@ export default function StudentViewOnlyAcademicDashboard() {
                   )}
                 </div>
               </div>
-
             </div>
           )}
-
         </div>
-      </main>
-    </div>
-  );
-}
+      </div>
+    );
+  }
