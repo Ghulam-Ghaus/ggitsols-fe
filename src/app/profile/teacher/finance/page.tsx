@@ -38,7 +38,7 @@ export default function TeacherFinancePage() {
   }, []);
 
   const formatMoney = (val: number | string) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
+    return 'Rs. ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number(val));
   };
 
   if (loading) {

@@ -147,12 +147,12 @@ export default function LoginPage() {
 
           {/* Footer Navigation */}
           <div className="mt-8 text-center text-sm text-slate-400 [transform:translateZ(10px)]">
-            Don't have an account?{' '}
+            Want to enroll?{' '}
             <Link 
-              href="/register" 
+              href="/apply" 
               className="text-blue-400 hover:text-blue-300 font-medium transition-colors hover:underline"
             >
-              Create Account
+              Apply for Admission
             </Link>
           </div>
         </div>

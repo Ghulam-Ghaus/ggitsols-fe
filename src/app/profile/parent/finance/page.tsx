@@ -86,7 +86,7 @@ export default function ParentFinancePage() {
       await api.post(`/finance/parents/students/${studentId}/fees/${selectedInvoice.id}/pay`, {
         amount: Number(payAmount)
       });
-      setSuccessMsg(`Simulated Payment of $${Number(payAmount).toFixed(2)} completed successfully!`);
+      setSuccessMsg(`Simulated Payment of Rs. ${Number(payAmount).toFixed(2)} completed successfully!`);
       setShowCheckoutModal(false);
       setSelectedInvoice(null);
       setPayAmount('');
@@ -99,7 +99,7 @@ export default function ParentFinancePage() {
   };
 
   const formatMoney = (val: number | string) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
+    return 'Rs. ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number(val));
   };
 
   if (pageLoading) {
@@ -274,7 +274,7 @@ export default function ParentFinancePage() {
 
             <form onSubmit={handlePaymentSubmit} className="space-y-4">
               <div>
-                <label className="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Payable Amount ($)</label>
+                <label className="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Payable Amount (Rs.)</label>
                 <input
                   type="number"
                   required

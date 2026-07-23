@@ -23,6 +23,9 @@ interface Student {
   admissionDate: string | null;
   userId: string;
   batchId: number | null;
+  paymentOption?: 'FULL_PAYMENT' | 'INSTALLMENT';
+  discountPercentage?: number;
+  discountFlat?: number;
   user: {
     id: string;
     firstName: string;
@@ -81,6 +84,9 @@ export default function AdminStudentManagementRegistry() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [regNo, setRegNo] = useState('');
   const [batchIdVal, setBatchIdVal] = useState<string>('');
+  const [paymentOptionVal, setPaymentOptionVal] = useState<'FULL_PAYMENT' | 'INSTALLMENT'>('INSTALLMENT');
+  const [discountPercentageVal, setDiscountPercentageVal] = useState<string>('0');
+  const [discountFlatVal, setDiscountFlatVal] = useState<string>('0');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchData = async () => {
@@ -107,6 +113,9 @@ export default function AdminStudentManagementRegistry() {
     setSelectedStudent(student);
     setRegNo(student.registrationNo || '');
     setBatchIdVal(student.batchId ? String(student.batchId) : 'unassigned');
+    setPaymentOptionVal(student.paymentOption || 'INSTALLMENT');
+    setDiscountPercentageVal(String(student.discountPercentage ?? 0));
+    setDiscountFlatVal(String(student.discountFlat ?? 0));
     setEditModalOpen(true);
     setError(null);
     setSuccess(null);
@@ -123,7 +132,10 @@ export default function AdminStudentManagementRegistry() {
     try {
       const payload = {
         registrationNo: regNo || null,
-        batchId: batchIdVal === 'unassigned' ? null : Number(batchIdVal)
+        batchId: batchIdVal === 'unassigned' ? null : Number(batchIdVal),
+        paymentOption: paymentOptionVal,
+        discountPercentage: Number(discountPercentageVal) || 0,
+        discountFlat: Number(discountFlatVal) || 0
       };
 
       await api.patch(`/academic/students/${selectedStudent.id}`, payload);
@@ -395,6 +407,44 @@ export default function AdminStudentManagementRegistry() {
                     <option key={batch.id} value={batch.id}>{batch.name} ({batch.course?.name})</option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Billing / Fee Plan</label>
+                <select
+                  value={paymentOptionVal}
+                  onChange={(e) => setPaymentOptionVal(e.target.value as any)}
+                  className="w-full bg-slate-950/60 border border-white/10 focus:border-purple-500/50 rounded-xl py-3 px-4 text-sm text-slate-300 outline-none cursor-pointer"
+                >
+                  <option value="INSTALLMENT">Monthly Installment Billed</option>
+                  <option value="FULL_PAYMENT">One-Time Full Tuition Payment</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Discount (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={discountPercentageVal}
+                    onChange={(e) => setDiscountPercentageVal(e.target.value)}
+                    className="w-full bg-slate-950/60 border border-white/10 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 rounded-xl py-3 px-4 text-sm text-white outline-none"
+                    placeholder="e.g. 15"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Flat Discount (Rs.)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={discountFlatVal}
+                    onChange={(e) => setDiscountFlatVal(e.target.value)}
+                    className="w-full bg-slate-950/60 border border-white/10 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 rounded-xl py-3 px-4 text-sm text-white outline-none"
+                    placeholder="e.g. 5000"
+                  />
+                </div>
               </div>
 
               {error && (

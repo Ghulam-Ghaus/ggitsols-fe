@@ -620,7 +620,7 @@ export default function LandingPage() {
             &copy; {new Date().getFullYear()} GG IT Solutions. All rights reserved.
             <div className="mt-2 space-x-4">
               <Link href="/login" className="hover:text-white transition-colors">Portal Login</Link>
-              <Link href="/register" className="hover:text-white transition-colors">Register</Link>
+              <Link href="/apply" className="hover:text-white transition-colors">Apply Now</Link>
             </div>
           </div>
         </div>

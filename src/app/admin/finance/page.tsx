@@ -157,6 +157,8 @@ export default function FinancePage() {
     studentId: '',
     academicTerm: 'Fall 2026',
     totalAmount: '',
+    originalAmount: '',
+    discountAmount: '0',
     dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     tags: 'Tuition'
   });
@@ -233,6 +235,37 @@ export default function FinancePage() {
     fetchData();
   }, [activeTab, startDate, endDate]);
 
+  // Pre-populate student invoice values based on default discount and billing plan
+  useEffect(() => {
+    if (!invoiceForm.studentId) return;
+    const student = (students as any[]).find(s => String(s.id) === String(invoiceForm.studentId));
+    if (student) {
+      const isInstallment = student.paymentOption !== 'FULL_PAYMENT';
+      const baseFee = student.batch?.course 
+        ? (isInstallment ? Number(student.batch.course.monthlyFee || 0) : Number(student.batch.course.fee || 0))
+        : 35000;
+      
+      const pct = Number(student.discountPercentage || 0);
+      const flat = Number(student.discountFlat || 0);
+
+      let discAmount = 0;
+      if (pct > 0) {
+        discAmount = baseFee * (pct / 100);
+      } else if (flat > 0) {
+        discAmount = Math.min(flat, baseFee);
+      }
+
+      const payAmount = baseFee - discAmount;
+
+      setInvoiceForm(prev => ({
+        ...prev,
+        originalAmount: String(baseFee),
+        discountAmount: String(discAmount),
+        totalAmount: String(payAmount)
+      }));
+    }
+  }, [invoiceForm.studentId, students]);
+
   // Handle invoice generation
   const handleCreateInvoice = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -243,6 +276,8 @@ export default function FinancePage() {
         studentId: Number(invoiceForm.studentId),
         academicTerm: invoiceForm.academicTerm,
         totalAmount: Number(invoiceForm.totalAmount),
+        originalAmount: Number(invoiceForm.originalAmount),
+        discountAmount: Number(invoiceForm.discountAmount),
         dueDate: invoiceForm.dueDate,
         tags: invoiceForm.tags.split(',').map(t => t.trim()).filter(Boolean)
       });
@@ -395,7 +430,7 @@ export default function FinancePage() {
 
   // Helper formatting values
   const formatMoney = (val: number | string) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
+    return 'Rs. ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number(val));
   };
 
   // Filter items based on query
@@ -1090,15 +1125,60 @@ export default function FinancePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Total Amount ($)</label>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Original Fee (Rs.)</label>
                   <input
                     type="number"
                     required
                     min="0"
-                    placeholder="e.g. 1500"
+                    placeholder="e.g. 35000"
+                    value={invoiceForm.originalAmount}
+                    onChange={(e) => {
+                      const orig = e.target.value;
+                      const disc = invoiceForm.discountAmount;
+                      const total = Number(orig) - Number(disc);
+                      setInvoiceForm({ 
+                        ...invoiceForm, 
+                        originalAmount: orig, 
+                        totalAmount: String(Math.max(0, total)) 
+                      });
+                    }}
+                    className="w-full px-3 py-2 border border-slate-250 dark:border-white/10 rounded-xl bg-slate-50 dark:bg-slate-950 text-sm outline-none font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Discount Applied (Rs.)</label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    placeholder="e.g. 5000"
+                    value={invoiceForm.discountAmount}
+                    onChange={(e) => {
+                      const disc = e.target.value;
+                      const orig = invoiceForm.originalAmount;
+                      const total = Number(orig) - Number(disc);
+                      setInvoiceForm({ 
+                        ...invoiceForm, 
+                        discountAmount: disc, 
+                        totalAmount: String(Math.max(0, total)) 
+                      });
+                    }}
+                    className="w-full px-3 py-2 border border-slate-250 dark:border-white/10 rounded-xl bg-slate-50 dark:bg-slate-950 text-sm outline-none font-semibold text-amber-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Payable Amount (Rs.)</label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    placeholder="e.g. 30000"
                     value={invoiceForm.totalAmount}
                     onChange={(e) => setInvoiceForm({ ...invoiceForm, totalAmount: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-250 dark:border-white/10 rounded-xl bg-slate-50 dark:bg-slate-950 text-sm outline-none"
+                    className="w-full px-3 py-2 border border-slate-250 dark:border-white/10 rounded-xl bg-slate-50 dark:bg-slate-950 text-sm outline-none font-bold text-emerald-500"
                   />
                 </div>
               </div>
@@ -1158,7 +1238,7 @@ export default function FinancePage() {
             </p>
             <form onSubmit={handleRecordPayment} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Amount to pay ($)</label>
+                <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Amount to pay (Rs.)</label>
                 <input
                   type="number"
                   required
@@ -1233,7 +1313,7 @@ export default function FinancePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Base Salary ($)</label>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Base Salary (Rs.)</label>
                   <input
                     type="number"
                     required
@@ -1248,7 +1328,7 @@ export default function FinancePage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Allowances/Bonus ($)</label>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Allowances/Bonus (Rs.)</label>
                   <input
                     type="number"
                     min="0"
@@ -1258,7 +1338,7 @@ export default function FinancePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Deductions ($)</label>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Deductions (Rs.)</label>
                   <input
                     type="number"
                     min="0"
