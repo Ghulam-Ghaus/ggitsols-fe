@@ -33,7 +33,10 @@ interface FeeCollection {
   tags: string[] | null;
   invoicedAt: string;
   paidAt: string | null;
+  studentDashboardFee: string;
+  actualFee: string;
 }
+
 
 export default function StudentFinancePage() {
   const { user, token, loading, logout } = useAuth();
@@ -117,9 +120,10 @@ export default function StudentFinancePage() {
   }
 
   // Calculate totals
-  const totalInvoiced = invoices.reduce((sum, inv) => sum + Number(inv.totalAmount), 0);
+  const totalInvoiced = invoices.reduce((sum, inv) => sum + Number(inv.studentDashboardFee || inv.totalAmount), 0);
   const totalPaid = invoices.reduce((sum, inv) => sum + Number(inv.paidAmount), 0);
-  const totalOutstanding = totalInvoiced - totalPaid;
+  const totalOutstanding = invoices.reduce((sum, inv) => sum + (Number(inv.actualFee || inv.totalAmount) - Number(inv.paidAmount)), 0);
+
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -218,10 +222,11 @@ export default function StudentFinancePage() {
                           {inv.status}
                         </span>
                       </td>
-                      <td className="p-4 text-right font-medium whitespace-nowrap">{formatMoney(inv.totalAmount)}</td>
+                      <td className="p-4 text-right font-medium whitespace-nowrap">{formatMoney(inv.studentDashboardFee || inv.totalAmount)}</td>
                       <td className={`p-4 text-right font-bold whitespace-nowrap ${balance > 0 ? 'text-amber-400' : 'text-slate-400'}`}>
                         {formatMoney(balance)}
                       </td>
+
                       <td className="p-4 text-center whitespace-nowrap">
                         {balance > 0 ? (
                           <button

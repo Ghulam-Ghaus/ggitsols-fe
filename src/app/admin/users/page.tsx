@@ -38,6 +38,7 @@ interface User {
   lastName: string;
   phone: string | null;
   isActive: boolean;
+  isEmailVerified: boolean;
   roleId: number;
   role: Role;
   createdAt: string;
@@ -411,13 +412,20 @@ export default function UserManagement() {
                       <button
                         onClick={() => handleToggleActive(u)}
                         className={`inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-[9px] font-semibold transition-all cursor-pointer ${
-                          u.isActive 
-                            ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20' 
-                            : 'bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20'
+                          !u.isEmailVerified
+                            ? 'bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20'
+                            : u.isActive 
+                              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20' 
+                              : 'bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20'
                         }`}
-                        title={u.isActive ? "Deactivate User" : "Activate User"}
+                        title={!u.isEmailVerified ? "Email Pending Verification" : u.isActive ? "Deactivate User" : "Activate User"}
                       >
-                        {u.isActive ? (
+                        {!u.isEmailVerified ? (
+                          <>
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse mr-1"></span>
+                            <span>Pending Verification</span>
+                          </>
+                        ) : u.isActive ? (
                           <>
                             <Check className="w-3 h-3 text-emerald-400" />
                             <span>Active</span>

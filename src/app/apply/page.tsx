@@ -35,6 +35,46 @@ interface Course {
 export default function ApplyPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationLoading, setVerificationLoading] = useState(false);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState<string | null>(null);
+
+  const handleVerifyEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setVerificationLoading(true);
+    setVerificationError(null);
+    setResendSuccess(null);
+    try {
+      await api.post('/users/verify-email', {
+        email: email.toLowerCase().trim(),
+        code: verificationCode.trim()
+      });
+      setVerificationSuccess(true);
+    } catch (err: any) {
+      setVerificationError(err.message || 'Invalid or expired verification code');
+    } finally {
+      setVerificationLoading(false);
+    }
+  };
+
+  const handleResendCode = async () => {
+    setVerificationLoading(true);
+    setVerificationError(null);
+    setResendSuccess(null);
+    try {
+      await api.post('/users/resend-code', {
+        email: email.toLowerCase().trim()
+      });
+      setResendSuccess('A new 6-digit verification code has been sent!');
+    } catch (err: any) {
+      setVerificationError(err.message || 'Failed to resend verification code');
+    } finally {
+      setVerificationLoading(false);
+    }
+  };
+
   const [phone, setPhone] = useState('');
   const [courseId, setCourseId] = useState('');
   const [paymentOption, setPaymentOption] = useState('FULL_PAYMENT');
@@ -110,9 +150,16 @@ export default function ApplyPage() {
     { documentName: 'CNIC or Identification', fileUrl: '' }
   ]);
 
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (error) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [error]);
+
 
   const handleAddDocument = () => {
     setDocuments([...documents, { documentName: '', fileUrl: '' }]);
@@ -222,6 +269,24 @@ export default function ApplyPage() {
     setLoading(true);
     setError(null);
 
+    if (guardianEmail && email && guardianEmail.toLowerCase().trim() === email.toLowerCase().trim()) {
+      setError('Guardian email and student email cannot be the same.');
+      setLoading(false);
+      return;
+    }
+
+    if (showGuardian2 && guardian2Email && email && guardian2Email.toLowerCase().trim() === email.toLowerCase().trim()) {
+      setError('Guardian 2 email and student email cannot be the same.');
+      setLoading(false);
+      return;
+    }
+
+    if (showGuardian2 && guardian2Email && guardianEmail && guardian2Email.toLowerCase().trim() === guardianEmail.toLowerCase().trim()) {
+      setError('Guardian 1 and Guardian 2 emails cannot be the same.');
+      setLoading(false);
+      return;
+    }
+
     // Clean up empty document fields
     const validDocuments = documents.filter(doc => doc.documentName.trim() && doc.fileUrl.trim());
 
@@ -261,7 +326,7 @@ export default function ApplyPage() {
     }
   };
 
-  if (success) {
+  if (success && verificationSuccess) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center px-6 relative overflow-hidden font-sans">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -271,21 +336,89 @@ export default function ApplyPage() {
           <div className="w-20 h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-emerald-400" />
           </div>
-          <h2 className="text-3xl font-extrabold text-white tracking-wide mb-4">Application Submitted!</h2>
+          <h2 className="text-3xl font-extrabold text-white tracking-wide mb-4">Email Verified!</h2>
           <p className="text-slate-300 text-base leading-relaxed mb-6">
-            Thank you, <span className="text-purple-400 font-semibold">{fullName}</span>, for applying to GG IT Solutions. Our administrative founders (Ghulam Ghaus and Saqib Javed) will review your academic qualifications.
+            Thank you! Your email address has been verified successfully and your student portal account is active.
           </p>
           <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-5 mb-8 text-left text-sm text-slate-400 space-y-2">
-            <p>📧 A verification email has been dispatched to <span className="text-slate-200 font-medium">{email}</span>.</p>
-            <p>🔑 Upon application approval, your user credentials and student portal login details will be created and emailed to you automatically.</p>
+            <p className="text-slate-300 font-medium">🔍 Next Step:</p>
+            <p>Our administrative founders (Ghulam Ghaus and Saqib Javed) will review your academic qualifications. You can log in to your dashboard to monitor status and upload any remaining documents.</p>
           </div>
           <Link
-            href="/"
-            className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold rounded-xl px-8 py-3.5 shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+            href="/login"
+            className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold rounded-xl px-8 py-3.5 shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home Page
+            Go to Login Portal
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center px-6 relative overflow-hidden font-sans">
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div className="w-full max-w-md bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_30px_60px_rgba(59,130,246,0.12)]">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-extrabold text-white tracking-wide">Verify Your Email</h2>
+            <p className="text-slate-400 text-sm mt-1">Enter the 6-digit code sent to <span className="text-blue-400 font-semibold">{email}</span></p>
+          </div>
+
+          {verificationError && (
+            <div className="mb-4 p-3.5 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400 text-xs font-medium">
+              {verificationError}
+            </div>
+          )}
+
+          {resendSuccess && (
+            <div className="mb-4 p-3.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-xs font-medium">
+              {resendSuccess}
+            </div>
+          )}
+
+          <form onSubmit={handleVerifyEmail} className="space-y-5">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                6-Digit Verification Code
+              </label>
+              <div className="relative group">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-400 transition-colors">
+                  <Lock className="w-5 h-5" />
+                </span>
+                <input
+                  type="text"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 rounded-xl py-3 pl-11 pr-4 text-sm text-slate-100 placeholder-slate-500 outline-none transition-all"
+                  placeholder="123456"
+                  maxLength={6}
+                  required
+                />
+              </div>
+              <p className="text-red-400 text-xs mt-1.5 font-semibold">Do not share this OTP/Verification Code with anyone.</p>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={verificationLoading}
+                className="flex-1 relative group overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {verificationLoading ? 'Verifying...' : 'Verify Code'}
+              </button>
+              <button
+                type="button"
+                onClick={handleResendCode}
+                disabled={verificationLoading}
+                className="px-4 py-3 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl transition-all shadow-md cursor-pointer shrink-0"
+              >
+                Resend Code
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     );
