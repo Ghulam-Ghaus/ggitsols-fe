@@ -76,6 +76,13 @@ export default function AdminAttendancePage() {
   const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
 
+  // Inline attendance marking states
+  const [rightPanelTab, setRightPanelTab] = useState<'history' | 'mark'>('history');
+  const [students, setStudents] = useState<any[]>([]);
+  const [records, setRecords] = useState<any[]>([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  const [submittingAttendance, setSubmittingAttendance] = useState(false);
+
   // Teacher Attendance States
   const [teacherDate, setTeacherDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
   const [teachersDaily, setTeachersDaily] = useState<TeacherRecord[]>([]);
@@ -83,6 +90,7 @@ export default function AdminAttendancePage() {
   const [editingStatus, setEditingStatus] = useState<string>('PRESENT');
   const [editingRemarks, setEditingRemarks] = useState<string>('');
   const [submittingTeacher, setSubmittingTeacher] = useState(false);
+
 
   // Fetch initial data
   useEffect(() => {
@@ -123,6 +131,123 @@ export default function AdminAttendancePage() {
     };
     fetchLogs();
   }, [selectedBatchId]);
+
+  // Fetch enrolled students and initialize attendance sheet when selectedBatchId or selectedDate changes
+  useEffect(() => {
+    if (!selectedBatchId) {
+      setStudents([]);
+      setRecords([]);
+      return;
+    }
+
+    const loadStudentsAndExistingSession = async () => {
+      try {
+        setLoadingStudents(true);
+        // 1. Fetch students enrolled in this batch
+        const studentsRes = await api.get(`/academic/batches/${selectedBatchId}/students`);
+        const studentsList = studentsRes.data.data || studentsRes.data || [];
+        setStudents(studentsList);
+
+        // 2. Check if attendance exists for selectedDate in attendanceLogs
+        const existingSession = attendanceLogs.find((l: any) => l.date === selectedDate);
+        
+        let preloadedRecords: Record<number, { status: string; remarks: string }> = {};
+        const sessionStudents: any[] = [];
+        if (existingSession) {
+          const sessionDetailsRes = await api.get(`/academic/attendance/${existingSession.id}`);
+          const sessionDetails = sessionDetailsRes.data.data || sessionDetailsRes.data;
+          
+          if (sessionDetails && sessionDetails.records) {
+            sessionDetails.records.forEach((rec: any) => {
+              preloadedRecords[Number(rec.studentId)] = {
+                status: rec.status,
+                remarks: rec.remarks || ''
+              };
+
+              if (rec.student) {
+                const inActiveList = studentsList.some((s: any) => Number(s.id) === Number(rec.studentId));
+                if (!inActiveList) {
+                  sessionStudents.push({
+                    ...rec.student,
+                    isRemoved: true
+                  });
+                }
+              }
+            });
+          }
+        }
+
+        // Combine active students and removed students who have historical records for this session
+        const allStudents = [...studentsList, ...sessionStudents];
+
+        // Initialize records
+        const initialRecords = allStudents.map((s: any) => ({
+          studentId: Number(s.id),
+          studentName: `${s.user?.firstName || ''} ${s.user?.lastName || ''}${s.isRemoved ? ' (Removed)' : ''}`.trim() || 'Unknown Student',
+          registrationNo: s.registrationNo || 'N/A',
+          status: preloadedRecords[s.id]?.status || 'PRESENT', // default to PRESENT
+          remarks: preloadedRecords[s.id]?.remarks || '',
+          isRemoved: s.isRemoved || false
+        }));
+
+        setRecords(initialRecords);
+      } catch (err: any) {
+        console.error('Failed to load batch student registry', err);
+      } finally {
+        setLoadingStudents(false);
+      }
+    };
+
+    loadStudentsAndExistingSession();
+  }, [selectedBatchId, selectedDate, attendanceLogs]);
+
+  const handleBulkStatusChange = (status: string) => {
+    setRecords((prev) => prev.map((r) => ({ ...r, status })));
+  };
+
+  const handleStatusChange = (studentId: number, status: string) => {
+    setRecords((prev) =>
+      prev.map((r) => (r.studentId === studentId ? { ...r, status } : r))
+    );
+  };
+
+  const handleRemarksChange = (studentId: number, remarks: string) => {
+    setRecords((prev) =>
+      prev.map((r) => (r.studentId === studentId ? { ...r, remarks } : r))
+    );
+  };
+
+  const handleSubmitAttendance = async () => {
+    try {
+      setSubmittingAttendance(true);
+      setError(null);
+      
+      const payload = {
+        batchId: Number(selectedBatchId),
+        date: selectedDate,
+        records: records.map((r) => ({
+          studentId: r.studentId,
+          status: r.status,
+          remarks: r.remarks.trim() || undefined
+        }))
+      };
+
+      await api.post('/academic/attendance', payload);
+      setSuccess('Student attendance registry updated successfully!');
+      
+      // Refresh logs
+      const logsRes = await api.get(`/academic/batches/${selectedBatchId}/attendance`);
+      setAttendanceLogs(logsRes.data.data || logsRes.data);
+      
+      setRightPanelTab('history');
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Failed to submit attendance');
+    } finally {
+      setSubmittingAttendance(false);
+    }
+  };
+
 
   // Fetch Teacher Daily Sheet when date changes
   useEffect(() => {
@@ -291,14 +416,16 @@ export default function AdminAttendancePage() {
               </div>
 
               {selectedBatchId && (
-                <Link
-                  href={`/admin/attendance/take?batchId=${selectedBatchId}&date=${selectedDate}`}
+                <button
+                  type="button"
+                  onClick={() => setRightPanelTab('mark')}
                   className="flex items-center justify-center w-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-purple-500/10 cursor-pointer text-center"
                 >
                   Mark / Edit Attendance
                   <ChevronRight className="w-4 h-4 ml-2" />
-                </Link>
+                </button>
               )}
+
             </div>
 
             {selectedBatchId && attendanceLogs.length > 0 && (
@@ -318,79 +445,245 @@ export default function AdminAttendancePage() {
             )}
           </div>
 
-          {/* Right panel: historic logs list */}
+          {/* Right panel: historic logs list or inline marking register */}
           <div className="lg:col-span-2 bg-slate-900/20 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-lg flex flex-col min-h-[400px]">
-            <h2 className="text-lg font-bold text-slate-200 mb-4">Historical Attendance Register</h2>
-
-            {loading ? (
-              <div className="flex-1 flex flex-col items-center justify-center space-y-3">
-                <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
-                <p className="text-xs text-slate-500">Loading attendance data...</p>
-              </div>
-            ) : !selectedBatchId ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-xl">
-                <Calendar className="w-12 h-12 text-slate-600 mb-3" />
-                <p className="text-sm text-slate-400 font-semibold">No Batch Selected</p>
-                <p className="text-xs text-slate-500 mt-1">Please select a course and batch on the left panel to load records.</p>
-              </div>
-            ) : attendanceLogs.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-xl">
-                <Users className="w-12 h-12 text-slate-600 mb-3" />
-                <p className="text-sm text-slate-400 font-semibold">No Attendance Records Yet</p>
-                <p className="text-xs text-slate-500 mt-1">No attendance sessions have been logged for this batch yet.</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                      <th className="py-3 px-2">Date</th>
-                      <th className="py-3 px-2">Taken By</th>
-                      <th className="py-3 px-2 text-center">Present</th>
-                      <th className="py-3 px-2 text-center">Absent</th>
-                      <th className="py-3 px-2 text-center">Late/Excused</th>
-                      <th className="py-3 px-2 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {attendanceLogs.map((log) => (
-                      <tr key={log.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.01] transition-colors text-sm">
-                        <td className="py-3.5 px-2 font-semibold text-slate-200">
-                          {new Date(log.date).toLocaleDateString('en-US', {
-                            weekday: 'short',
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </td>
-                        <td className="py-3.5 px-2 text-slate-400">
-                          {log.takenByUser ? `${log.takenByUser.firstName} ${log.takenByUser.lastName}` : 'System'}
-                        </td>
-                        <td className="py-3.5 px-2 text-center text-emerald-400 font-bold">
-                          {log.stats.present}
-                        </td>
-                        <td className="py-3.5 px-2 text-center text-rose-400 font-bold">
-                          {log.stats.absent}
-                        </td>
-                        <td className="py-3.5 px-2 text-center text-amber-400 font-semibold">
-                          {log.stats.late + log.stats.excused}
-                        </td>
-                        <td className="py-3.5 px-2 text-right">
-                          <Link
-                            href={`/admin/attendance/take?batchId=${selectedBatchId}&date=${log.date}`}
-                            className="inline-flex items-center text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors"
-                          >
-                            <Edit2 className="w-3.5 h-3.5 mr-1" />
-                            Edit
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {selectedBatchId && (
+              <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => setRightPanelTab('history')}
+                    className={`pb-2 text-sm font-bold border-b-2 transition-all cursor-pointer ${
+                      rightPanelTab === 'history' ? 'border-purple-500 text-purple-400' : 'border-transparent text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    Historical Register
+                  </button>
+                  <button
+                    onClick={() => setRightPanelTab('mark')}
+                    className={`pb-2 text-sm font-bold border-b-2 transition-all cursor-pointer ${
+                      rightPanelTab === 'mark' ? 'border-purple-500 text-purple-400' : 'border-transparent text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    Mark Attendance
+                  </button>
+                </div>
               </div>
             )}
+
+            {rightPanelTab === 'mark' && selectedBatchId ? (
+              loadingStudents ? (
+                <div className="flex-1 flex flex-col items-center justify-center space-y-3">
+                  <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+                  <p className="text-xs text-slate-500">Loading student registry...</p>
+                </div>
+              ) : records.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-xl">
+                  <Users className="w-12 h-12 text-slate-600 mb-3" />
+                  <p className="text-sm text-slate-450 font-bold">No Enrolled Students</p>
+                  <p className="text-xs text-slate-500 mt-1">There are no students enrolled in this batch yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4 animate-in fade-in duration-200">
+                  {/* Bulk Mark Options */}
+                  <div className="flex flex-wrap gap-2 items-center justify-between border-b border-white/5 pb-3">
+                    <span className="text-xs font-bold text-slate-300">Target Date: {selectedDate}</span>
+                    <div className="flex gap-1.5 items-center">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-1">Mark All:</span>
+                      <button
+                        onClick={() => handleBulkStatusChange('PRESENT')}
+                        className="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 rounded-md text-[10px] font-bold cursor-pointer transition-all"
+                      >
+                        Present
+                      </button>
+                      <button
+                        onClick={() => handleBulkStatusChange('ABSENT')}
+                        className="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 rounded-md text-[10px] font-bold cursor-pointer transition-all"
+                      >
+                        Absent
+                      </button>
+                      <button
+                        onClick={() => handleBulkStatusChange('LATE')}
+                        className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 rounded-md text-[10px] font-bold cursor-pointer transition-all"
+                      >
+                        Late
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="border-b border-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          <th className="py-2.5 px-2">Student Name</th>
+                          <th className="py-2.5 px-2 text-center">Status Selection</th>
+                          <th className="py-2.5 px-2">Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {records.map((row) => (
+                          <tr key={row.studentId} className="border-b border-white/5 last:border-0 hover:bg-white/[0.01] transition-colors text-sm">
+                            <td className="py-3 px-2 font-semibold text-slate-200">
+                              {row.studentName}
+                              <span className="text-[10px] text-slate-500 block font-normal">{row.registrationNo}</span>
+                            </td>
+                            <td className="py-3 px-2">
+                              <div className="flex justify-center items-center gap-1.5">
+                                <button
+                                  onClick={() => handleStatusChange(row.studentId, 'PRESENT')}
+                                  className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer ${
+                                    row.status === 'PRESENT'
+                                      ? 'bg-emerald-500 border-emerald-500 text-white shadow-md shadow-emerald-500/10'
+                                      : 'bg-slate-950/40 border-white/5 text-slate-400 hover:text-slate-200'
+                                  }`}
+                                >
+                                  Present
+                                </button>
+                                <button
+                                  onClick={() => handleStatusChange(row.studentId, 'ABSENT')}
+                                  className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer ${
+                                    row.status === 'ABSENT'
+                                      ? 'bg-rose-500 border-rose-500 text-white shadow-md shadow-rose-500/10'
+                                      : 'bg-slate-950/40 border-white/5 text-slate-400 hover:text-slate-200'
+                                  }`}
+                                >
+                                  Absent
+                                </button>
+                                <button
+                                  onClick={() => handleStatusChange(row.studentId, 'LATE')}
+                                  className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer ${
+                                    row.status === 'LATE'
+                                      ? 'bg-amber-500 border-amber-500 text-white shadow-md shadow-amber-500/10'
+                                      : 'bg-slate-950/40 border-white/5 text-slate-400 hover:text-slate-200'
+                                  }`}
+                                >
+                                  Late
+                                </button>
+                              </div>
+                            </td>
+                            <td className="py-3 px-2">
+                              <input
+                                type="text"
+                                value={row.remarks}
+                                onChange={(e) => handleRemarksChange(row.studentId, e.target.value)}
+                                placeholder="Add remark..."
+                                className="w-full bg-slate-950/40 border border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-purple-500"
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex justify-end gap-2 border-t border-white/5 pt-4">
+                    <button
+                      onClick={() => setRightPanelTab('history')}
+                      className="px-4 py-2 rounded-xl border border-white/10 text-slate-350 hover:bg-slate-950/60 hover:text-white transition-all text-xs font-bold cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSubmitAttendance}
+                      disabled={submittingAttendance}
+                      className="flex items-center bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-md cursor-pointer"
+                    >
+                      {submittingAttendance ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-3.5 h-3.5 mr-1.5" />
+                          Save Attendance
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )
+            ) : (
+              <>
+                {rightPanelTab === 'history' && selectedBatchId && (
+                  <h2 className="text-lg font-bold text-slate-200 mb-4">Historical Attendance Register</h2>
+                )}
+
+                {loading ? (
+                  <div className="flex-1 flex flex-col items-center justify-center space-y-3">
+                    <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+                    <p className="text-xs text-slate-500">Loading attendance data...</p>
+                  </div>
+                ) : !selectedBatchId ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-xl">
+                    <Calendar className="w-12 h-12 text-slate-600 mb-3" />
+                    <p className="text-sm text-slate-400 font-semibold">No Batch Selected</p>
+                    <p className="text-xs text-slate-500 mt-1">Please select a course and batch on the left panel to load records.</p>
+                  </div>
+                ) : attendanceLogs.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-xl">
+                    <Users className="w-12 h-12 text-slate-600 mb-3" />
+                    <p className="text-sm text-slate-400 font-semibold">No Attendance Records Yet</p>
+                    <p className="text-xs text-slate-500 mt-1">No attendance sessions have been logged for this batch yet.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="border-b border-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          <th className="py-3 px-2">Date</th>
+                          <th className="py-3 px-2">Taken By</th>
+                          <th className="py-3 px-2 text-center">Present</th>
+                          <th className="py-3 px-2 text-center">Absent</th>
+                          <th className="py-3 px-2 text-center">Late/Excused</th>
+                          <th className="py-3 px-2 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {attendanceLogs.map((log) => (
+                          <tr key={log.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.01] transition-colors text-sm">
+                            <td className="py-3.5 px-2 font-semibold text-slate-200">
+                              {new Date(log.date).toLocaleDateString('en-US', {
+                                weekday: 'short',
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </td>
+                            <td className="py-3.5 px-2 text-slate-400">
+                              {log.takenByUser ? `${log.takenByUser.firstName} ${log.takenByUser.lastName}` : 'System'}
+                            </td>
+                            <td className="py-3.5 px-2 text-center text-emerald-400 font-bold">
+                              {log.stats.present}
+                            </td>
+                            <td className="py-3.5 px-2 text-center text-rose-400 font-bold">
+                              {log.stats.absent}
+                            </td>
+                            <td className="py-3.5 px-2 text-center text-amber-400 font-semibold">
+                              {log.stats.late + log.stats.excused}
+                            </td>
+                            <td className="py-3.5 px-2 text-right">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedDate(log.date);
+                                  setRightPanelTab('mark');
+                                }}
+                                className="inline-flex items-center text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors cursor-pointer"
+                              >
+                                <Edit2 className="w-3.5 h-3.5 mr-1" />
+                                Edit
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            )}
           </div>
+
         </div>
       )}
 

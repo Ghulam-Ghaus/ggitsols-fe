@@ -128,9 +128,43 @@ export default function ApplyPage() {
     setDocuments(updated);
   };
 
+  const [uploadingIndices, setUploadingIndices] = useState<Record<number, boolean>>({});
+
+  const handleFileChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 500 * 1024) {
+      alert('File size exceeds 500KB limit');
+      e.target.value = '';
+      return;
+    }
+
+    setUploadingIndices(prev => ({ ...prev, [index]: true }));
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await api.post('/admissions/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      const data = res.data;
+      if (data && data.fileUrl) {
+        handleDocumentChange(index, 'fileUrl', data.fileUrl);
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || 'Failed to upload file');
+    } finally {
+      setUploadingIndices(prev => ({ ...prev, [index]: false }));
+    }
+  };
+
+
   const handleSearchGuardian1 = async () => {
     if (!guardian1SearchEmail.trim()) {
-      setGuardian1SearchError('Please enter a guardian email to search');
+      setGuardian1SearchError('Please enter a guardian email or phone to search');
       return;
     }
     setGuardian1SearchLoading(true);
@@ -143,7 +177,7 @@ export default function ApplyPage() {
       if (data && data.exists) {
         setGuardianName(data.fullName);
         setGuardianPhone(data.phone || '');
-        setGuardianEmail(guardian1SearchEmail.trim());
+        setGuardianEmail(data.email || '');
         setGuardian1SearchSuccess('Guardian found! Details auto-populated.');
       } else {
         setGuardian1SearchError('No registered guardian found. Fill details manually below.');
@@ -157,7 +191,7 @@ export default function ApplyPage() {
 
   const handleSearchGuardian2 = async () => {
     if (!guardian2SearchEmail.trim()) {
-      setGuardian2SearchError('Please enter a guardian email to search');
+      setGuardian2SearchError('Please enter a guardian email or phone to search');
       return;
     }
     setGuardian2SearchLoading(true);
@@ -170,7 +204,7 @@ export default function ApplyPage() {
       if (data && data.exists) {
         setGuardian2Name(data.fullName);
         setGuardian2Phone(data.phone || '');
-        setGuardian2Email(guardian2SearchEmail.trim());
+        setGuardian2Email(data.email || '');
         setGuardian2SearchSuccess('Guardian found! Details auto-populated.');
       } else {
         setGuardian2SearchError('No registered guardian found. Fill details manually below.');
@@ -181,6 +215,7 @@ export default function ApplyPage() {
       setGuardian2SearchLoading(false);
     }
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -492,15 +527,22 @@ export default function ApplyPage() {
                       <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
                         Highest Qualification / Degree *
                       </label>
-                      <input
-                        type="text"
+                      <select
                         value={highestQualification}
                         onChange={(e) => setHighestQualification(e.target.value)}
-                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
-                        placeholder="e.g. Matric / FSc / BS CS"
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all appearance-none cursor-pointer text-slate-200"
                         required
-                      />
+                      >
+                        <option value="" className="bg-slate-950 text-slate-400">Select qualification...</option>
+                        <option value="Matriculation / O-Level" className="bg-slate-950">Matriculation / O-Level</option>
+                        <option value="Intermediate (FSc / ICS / FA / ICom) / A-Level" className="bg-slate-950">Intermediate (FSc / ICS / FA / ICom) / A-Level</option>
+                        <option value="Bachelor's Degree (BS / BSc / BCom)" className="bg-slate-950">Bachelor's Degree (BS / BSc / BCom)</option>
+                        <option value="Master's Degree (MS / MSc / MPhil)" className="bg-slate-950">Master's Degree (MS / MSc / MPhil)</option>
+                        <option value="Doctorate / PhD" className="bg-slate-950">Doctorate / PhD</option>
+                        <option value="Other" className="bg-slate-950">Other</option>
+                      </select>
                     </div>
+
 
                     <div>
                       <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
@@ -552,15 +594,19 @@ export default function ApplyPage() {
                       <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
                         Year of Completion *
                       </label>
-                      <input
-                        type="number"
+                      <select
                         value={completionYear}
                         onChange={(e) => setCompletionYear(e.target.value)}
-                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all"
-                        placeholder="e.g. 2025"
+                        className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-3 px-4 text-sm outline-none transition-all appearance-none cursor-pointer text-slate-200"
                         required
-                      />
+                      >
+                        <option value="" className="bg-slate-950 text-slate-400">Select year...</option>
+                        {Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                          <option key={year} value={year} className="bg-slate-950">{year}</option>
+                        ))}
+                      </select>
                     </div>
+
                   </div>
                 </div>
 
@@ -633,15 +679,15 @@ export default function ApplyPage() {
                 {guardian1Mode === 'search' && (
                   <div className="bg-slate-950/30 border border-white/5 p-4 rounded-2xl space-y-3 animate-in fade-in duration-200">
                     <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                      Search Guardian by Registered Email
+                      Search Guardian by Registered Email or Phone
                     </label>
                     <div className="flex gap-3">
                       <input
-                        type="email"
+                        type="text"
                         value={guardian1SearchEmail}
                         onChange={(e) => setGuardian1SearchEmail(e.target.value)}
-                        className="flex-1 bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-2 px-4 text-sm outline-none transition-all"
-                        placeholder="guardian.registered@example.com"
+                        className="flex-1 bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-2 px-4 text-sm outline-none transition-all text-slate-200"
+                        placeholder="guardian.registered@example.com or phone number"
                       />
                       <button
                         type="button"
@@ -816,15 +862,15 @@ export default function ApplyPage() {
                     {guardian2Mode === 'search' && (
                       <div className="bg-slate-950/30 border border-white/5 p-4 rounded-2xl space-y-3 animate-in fade-in duration-200">
                         <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                          Search Secondary Guardian by Registered Email
+                          Search Secondary Guardian by Registered Email or Phone
                         </label>
                         <div className="flex gap-3">
                           <input
-                            type="email"
+                            type="text"
                             value={guardian2SearchEmail}
                             onChange={(e) => setGuardian2SearchEmail(e.target.value)}
-                            className="flex-1 bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-2 px-4 text-sm outline-none transition-all"
-                            placeholder="guardian2.registered@example.com"
+                            className="flex-1 bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 rounded-xl py-2 px-4 text-sm outline-none transition-all text-slate-200"
+                            placeholder="guardian2.registered@example.com or phone number"
                           />
                           <button
                             type="button"
@@ -1001,7 +1047,7 @@ export default function ApplyPage() {
                     Add Document
                   </button>
                 </div>
-                <p className="text-[11px] text-slate-500">Provide public links (e.g. Google Drive, Dropbox, shared cloud links) to matric, intermediate certificates, or CNIC card scans.</p>
+                <p className="text-[11px] text-slate-500">Upload copies of your matric, intermediate certificates, or CNIC card scans (Max size: 500KB per file).</p>
 
                 <div className="space-y-3">
                   {documents.map((doc, idx) => (
@@ -1011,17 +1057,28 @@ export default function ApplyPage() {
                         value={doc.documentName}
                         onChange={(e) => handleDocumentChange(idx, 'documentName', e.target.value)}
                         placeholder="Document Name (e.g. Matric Transcript)"
-                        className="w-1/3 bg-slate-900 border border-white/5 focus:border-blue-500/50 rounded-lg py-2 px-3 text-xs outline-none text-slate-200 transition-all"
-                        required
+                        className="w-1/3 bg-slate-900 border border-white/5 focus:border-blue-500/50 rounded-lg py-2 px-3 text-xs outline-none text-slate-205 transition-all text-slate-200"
                       />
-                      <input
-                        type="url"
-                        value={doc.fileUrl}
-                        onChange={(e) => handleDocumentChange(idx, 'fileUrl', e.target.value)}
-                        placeholder="Document Link URL (https://...)"
-                        className="flex-1 bg-slate-900 border border-white/5 focus:border-blue-500/50 rounded-lg py-2 px-3 text-xs outline-none text-slate-200 transition-all"
-                        required
-                      />
+                      <div className="flex-1 flex items-center gap-2">
+                        <input
+                          type="file"
+                          id={`file-upload-${idx}`}
+                          onChange={(e) => handleFileChange(idx, e)}
+                          className="hidden"
+                          accept=".pdf,.png,.jpg,.jpeg"
+                        />
+                        <label
+                          htmlFor={`file-upload-${idx}`}
+                          className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-white/10 text-xs font-semibold text-slate-350 cursor-pointer select-none transition-all flex items-center gap-1.5 shrink-0"
+                        >
+                          {uploadingIndices[idx] ? 'Uploading...' : doc.fileUrl ? 'Change File' : 'Choose File'}
+                        </label>
+                        {doc.fileUrl && (
+                          <span className="text-xs text-emerald-400 font-medium truncate max-w-[200px]" title={doc.fileUrl}>
+                            ✓ Uploaded
+                          </span>
+                        )}
+                      </div>
                       {documents.length > 1 && (
                         <button
                           type="button"

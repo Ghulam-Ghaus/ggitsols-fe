@@ -32,7 +32,9 @@ api.interceptors.response.use(
     if (error.response) {
       // The server responded with a status code outside the 2xx range
       const data = error.response.data;
-      if (data && data.message) {
+      if (data && data.error && data.error.message) {
+        message = data.error.message;
+      } else if (data && data.message) {
         if (Array.isArray(data.message)) {
           message = data.message.join(', '); // Join NestJS validation messages
         } else {
@@ -41,6 +43,7 @@ api.interceptors.response.use(
       } else {
         message = error.response.statusText || message;
       }
+
 
       // Handle 401 Unauthorized globally (exclude login path to avoid redirect loops)
       if (error.response.status === 401 && typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {

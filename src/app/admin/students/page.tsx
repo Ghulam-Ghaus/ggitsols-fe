@@ -302,7 +302,7 @@ export default function AdminStudentManagementRegistry() {
                           title="View Student Performance"
                         >
                           <Eye className="w-4 h-4 mr-1" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-1">Dossier</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-1">View</span>
                         </Link>
                         <button
                           onClick={() => handleOpenEdit(student)}
@@ -310,8 +310,9 @@ export default function AdminStudentManagementRegistry() {
                           title="Configure Batch & Registration"
                         >
                           <Edit2 className="w-4 h-4 mr-1" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-1">Config</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-1">Edit</span>
                         </button>
+
                       </div>
                     </td>
                   </tr>
