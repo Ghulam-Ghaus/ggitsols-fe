@@ -342,7 +342,7 @@ export default function ApplyPage() {
           </p>
           <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-5 mb-8 text-left text-sm text-slate-400 space-y-2">
             <p className="text-slate-300 font-medium">🔍 Next Step:</p>
-            <p>Our administrative founders (Ghulam Ghaus and Saqib Javed) will review your academic qualifications. You can log in to your dashboard to monitor status and upload any remaining documents.</p>
+            <p>Our academic admissions board led by founder Ghulam Ghaus will review your qualifications. You can log in to your dashboard to monitor status and upload any remaining documents.</p>
           </div>
           <Link
             href="/login"
