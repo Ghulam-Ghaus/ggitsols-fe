@@ -33,6 +33,8 @@ import {
   Layers,
   Code2,
   Zap,
+  Briefcase,
+  Award,
 } from 'lucide-react';
 
 // ── Brand SVG Icons ────────────────────────────────────────────────────────────
@@ -118,7 +120,7 @@ export default function LandingPage() {
   const [inquiryName, setInquiryName] = useState('');
   const [inquiryEmail, setInquiryEmail] = useState('');
   const [inquiryPhone, setInquiryPhone] = useState('');
-  const [inquiryTopic, setInquiryTopic] = useState('Desktop POS & ERP');
+  const [inquiryTopic, setInquiryTopic] = useState('Desktop POS & ERP Application (Electron.js)');
   const [inquiryMessage, setInquiryMessage] = useState('');
   const [inquirySubmitted, setInquirySubmitted] = useState(false);
 
@@ -239,15 +241,24 @@ export default function LandingPage() {
       style={{ background: 'linear-gradient(160deg, #d6edf9 0%, #e4f2fb 25%, #eef7fd 55%, #f7fbff 80%, #ffffff 100%)' }}
     >
 
-      <div className="bg-[#0b2f58] text-white text-center px-4 py-2 text-[11px] sm:text-xs font-medium tracking-wide">
-        🚀 Now accepting Software Projects & IT Training Admissions
-        <a
-          href="#contact"
-          className="ml-2 text-sky-300 hover:text-sky-200 font-bold transition"
-        >
-          Work With Us →
-        </a>
-      </div>
+      {/* ═══════════════════════════════ TOP NOTIFICATION BAR ═══════════════════════════════ */}
+      <aside aria-label="Global announcement" className="relative z-50 bg-gradient-to-r from-[#061e38] via-[#0284c7] to-[#061e38] text-white px-3 sm:px-4 py-2 text-xs sm:text-[13px] border-b border-sky-400/25 shadow-sm">
+        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center font-medium">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-sky-100 shrink-0">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Software House &amp; Academy
+          </span>
+          <span className="text-slate-100">
+            Enterprise Desktop &amp; Web Apps, Microservices, Voice AI &amp; Professional IT Training Admissions Open
+          </span>
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-1 text-sky-200 hover:text-white font-bold underline underline-offset-4 decoration-sky-300 hover:decoration-white transition"
+          >
+            Hire Us / Enroll Today →
+          </a>
+        </div>
+      </aside>
 
       {/* ═══════════════════════════════ NAVBAR ═══════════════════════════════ */}
       <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-sky-100 shadow-sm">
@@ -752,92 +763,171 @@ export default function LandingPage() {
         id="leadership"
         className="py-20 px-4 sm:px-6 lg:px-10 bg-[#f5fafd] border-b border-sky-100"
       >
-        <div className="mx-auto max-w-5xl">
-          <div className="grid lg:grid-cols-[0.75fr_1.25fr] gap-8 items-center">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-[0.72fr_1.28fr] gap-10 items-start">
 
-            {/* Founder Image */}
-            <div className="relative min-h-[340px] sm:min-h-[420px] rounded-3xl overflow-hidden shadow-lg border border-sky-100">
-              <Image
-                src="/founder.png"
-                alt="Ghulam Ghaus - Founder & Technical Lead"
-                fill
-                priority
-                sizes="(min-width: 1024px) 35vw, 100vw"
-                className="object-cover object-top"
-              />
+            {/* Founder Image & Quick Card */}
+            <div className="space-y-4">
+              <div className="relative min-h-[380px] sm:min-h-[440px] rounded-3xl overflow-hidden shadow-lg border border-sky-100 group">
+                <Image
+                  src="/founder.png"
+                  alt="Ghulam Ghaus - Founder & Principal Software Engineer"
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 35vw, 100vw"
+                  className="object-cover object-top transition duration-500 group-hover:scale-105"
+                />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0b2f58] via-transparent to-transparent p-6 flex flex-col justify-end text-white">
-                <span className="px-3 py-1 bg-sky-500 rounded-full text-[10px] font-extrabold uppercase w-fit mb-1">
-                  Founder & Technical Lead
-                </span>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07213d] via-[#07213d]/40 to-transparent p-6 flex flex-col justify-end text-white">
+                  <span className="px-3 py-1 bg-sky-500/90 backdrop-blur-sm rounded-full text-[10px] font-extrabold uppercase tracking-wider w-fit mb-2 shadow-sm border border-sky-300/30">
+                    Founder &amp; Principal Engineer
+                  </span>
 
-                <h3 className="text-xl font-bold">
-                  Ghulam Ghaus
-                </h3>
+                  <h3 className="text-2xl font-bold tracking-tight">
+                    Ghulam Ghaus
+                  </h3>
 
-                <p className="text-xs text-sky-200">
-                  BS Information Technology · Software Engineer
-                </p>
+                  <p className="text-xs text-sky-200 mt-1">
+                    BS IT · Certified Agentic &amp; Robotic AI Engineer
+                  </p>
+
+                  <div className="mt-3 pt-3 border-t border-white/15 flex items-center gap-2 text-[11px] text-slate-200">
+                    <MapPin className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                    <span>5 Marlah Scheme, Khurrianwala, Faisalabad · Open to Remote</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Education & Certs Card */}
+              <div className="p-4 rounded-2xl bg-white border border-sky-100 shadow-sm space-y-2.5 text-xs text-slate-600">
+                <div className="flex items-start gap-2.5">
+                  <GraduationCap className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-[#0b2f58]">BS Information Technology (BS IT)</p>
+                    <p className="text-[11px] text-slate-500">Government College University (GCU) Faisalabad</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2.5 pt-2 border-t border-slate-100">
+                  <Award className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-[#0b2f58]">Certified Agentic &amp; Robotic AI Engineer</p>
+                    <p className="text-[11px] text-slate-500">Air University Islamabad</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Profile */}
-            <div>
-              <p className="text-[11px] font-bold tracking-widest text-sky-500 uppercase mb-2">
-                Leadership
-              </p>
+            {/* Profile Content */}
+            <div className="space-y-6">
+              <div>
+                <p className="text-[11px] font-extrabold tracking-widest text-sky-600 uppercase mb-1.5 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+                  Leadership &amp; Technical Direction
+                </p>
 
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#0b2f58] mb-2">
-                Ghulam Ghaus
-              </h2>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0b2f58] tracking-tight">
+                  Ghulam Ghaus
+                </h2>
 
-              <p className="text-xs sm:text-sm font-semibold text-sky-700 mb-4">
-                Software Engineer · Backend-Focused Full-Stack · AI Integrations
-              </p>
-
-              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mb-3">
-                Software Engineer with 4+ years of professional experience building
-                production backend, full-stack, SaaS, real-time and AI-integrated
-                applications using Node.js, TypeScript, Python, React, PostgreSQL
-                and cloud technologies.
-              </p>
-
-              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mb-5">
-                Founder and Technical Lead at GG IT Solutions, leading software
-                architecture, backend engineering, AI integrations and practical
-                software development. Experienced in microservices, REST APIs,
-                multi-tenant platforms, WebSockets, cloud systems, Voice AI and
-                low-latency STT/TTS applications, while mentoring developers through
-                real-world projects.
-              </p>
-
-              {/* Skills */}
-              <div className="flex flex-wrap gap-2 mb-5">
-                {[
-                  'Node.js / NestJS',
-                  'TypeScript / Python',
-                  'React / Next.js',
-                  'PostgreSQL / Supabase',
-                  'AWS / Docker',
-                  'Voice AI / STT-TTS',
-                  'Electron.js / Desktop',
-                ].map((t) => (
-                  <span
-                    key={t}
-                    className="px-2.5 py-1 rounded-md bg-[#f0f7fd] border border-sky-200 text-sky-900 font-semibold text-[11px]"
-                  >
-                    {t}
-                  </span>
-                ))}
+                <p className="text-xs sm:text-sm font-bold text-sky-700 mt-1">
+                  Software Engineer | Backend-Focused Full-Stack &amp; AI Integrations | Node.js, TypeScript, Python, React/Next.js
+                </p>
               </div>
 
-              {/* Social Links */}
-              <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
+              <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p>
+                  Software Engineer with <strong className="text-[#0b2f58]">4+ years of professional experience</strong> building
+                  production backend, full-stack, SaaS, real-time, and AI-integrated applications using Node.js, TypeScript,
+                  Python, React/Next.js, PostgreSQL, and cloud technologies. Strong background in REST APIs, microservices,
+                  authentication &amp; authorization, database architecture, and WebSockets.
+                </p>
+
+                <p>
+                  Specialized in <strong className="text-[#0b2f58]">Voice AI and real-time audio streaming</strong> — integrating
+                  Twilio Media Streams with Deepgram STT, OpenAI/Groq/Gemini LLMs, and Deepgram/Cartesia TTS for ultra-low latency
+                  conversational agents. Hands-on experience delivering multi-tenant platforms, scalable systems, automated pipelines,
+                  and offline-first <strong className="text-[#0b2f58]">Desktop Applications using Electron.js</strong>, React, and local databases.
+                </p>
+
+                <p>
+                  As Founder and Technical Lead at <strong className="text-[#0b2f58]">GG IT Solutions</strong>, leads full-lifecycle
+                  software engineering for global clients across the US, Europe, and the Middle East, while training the next generation
+                  of software engineers through real-world production codebases.
+                </p>
+              </div>
+
+              {/* Career Highlights */}
+              <div className="space-y-2 pt-2">
+                <p className="text-xs font-bold text-[#0b2f58] uppercase tracking-wider flex items-center gap-1.5">
+                  <Briefcase className="w-3.5 h-3.5 text-sky-500" />
+                  Professional Experience
+                </p>
+                <div className="grid sm:grid-cols-3 gap-2.5">
+                  <div className="p-3 rounded-xl bg-white border border-sky-100 shadow-xs">
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className="font-extrabold text-[#0b2f58]">INTAKELY AI</span>
+                      <span className="text-[10px] text-sky-600 font-bold">2025 – 2026</span>
+                    </div>
+                    <p className="text-[11px] font-semibold text-slate-700">Voice AI Engineer</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Remote, US · Twilio Streams, Deepgram STT/TTS, Real-time Conversational AI</p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white border border-sky-100 shadow-xs">
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className="font-extrabold text-[#0b2f58]">SOFTOO</span>
+                      <span className="text-[10px] text-sky-600 font-bold">2024 – 2025</span>
+                    </div>
+                    <p className="text-[11px] font-semibold text-slate-700">Software Engineer</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Islamabad · Microservices, High-throughput REST APIs &amp; Cloud Systems</p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white border border-sky-100 shadow-xs">
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className="font-extrabold text-[#0b2f58]">HIVEWORX</span>
+                      <span className="text-[10px] text-sky-600 font-bold">2022 – 2024</span>
+                    </div>
+                    <p className="text-[11px] font-semibold text-slate-700">Node.js Developer</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Islamabad · Backend Services, WebSockets, BullMQ, Redis &amp; Event Queues</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Skills Chips */}
+              <div className="space-y-2 pt-2">
+                <p className="text-xs font-bold text-[#0b2f58] uppercase tracking-wider">
+                  Core Technologies &amp; Capabilities
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    'Node.js / Express / NestJS',
+                    'TypeScript / Python',
+                    'React / Next.js',
+                    'Electron.js (Desktop Apps)',
+                    'Voice AI (Twilio Media Streams)',
+                    'Deepgram STT/TTS & Cartesia',
+                    'OpenAI / Groq / Gemini LLMs',
+                    'Microservices & WebSockets',
+                    'PostgreSQL / MySQL / Supabase',
+                    'Redis / BullMQ',
+                    'AWS (EC2, S3) / Docker / Fly.io',
+                  ].map((t) => (
+                    <span
+                      key={t}
+                      className="px-2.5 py-1 rounded-lg bg-white border border-sky-200 text-sky-900 font-semibold text-[11px] shadow-2xs"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Social Links & Direct Contact */}
+              <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-sky-100">
                 <a
                   href="https://linkedin.com/in/ghulam-ghaus-5b4ba9194"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 transition"
+                  className="p-2.5 rounded-xl bg-white border border-sky-200 hover:bg-sky-50 text-sky-700 shadow-2xs transition"
                   title="LinkedIn"
                 >
                   <LinkedinIcon className="w-4 h-4" />
@@ -847,7 +937,7 @@ export default function LandingPage() {
                   href="https://github.com/Ghulam-Ghaus"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-slate-700 transition"
+                  className="p-2.5 rounded-xl bg-white border border-sky-200 hover:bg-sky-50 text-slate-700 shadow-2xs transition"
                   title="GitHub"
                 >
                   <GithubIcon className="w-4 h-4" />
@@ -857,8 +947,8 @@ export default function LandingPage() {
                   href="https://www.upwork.com/freelancers/~018e9f6013ee023bf0"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition"
-                  title="Upwork"
+                  className="p-2.5 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50 text-emerald-700 shadow-2xs transition"
+                  title="Upwork Profile"
                 >
                   <UpworkIcon className="w-4 h-4" />
                 </a>
@@ -867,8 +957,8 @@ export default function LandingPage() {
                   href="https://gghaus-portfolio.web.app"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 transition"
-                  title="Portfolio"
+                  className="p-2.5 rounded-xl bg-white border border-sky-200 hover:bg-sky-50 text-sky-700 shadow-2xs transition"
+                  title="Personal Portfolio"
                 >
                   <Globe className="w-4 h-4" />
                 </a>
@@ -877,10 +967,28 @@ export default function LandingPage() {
                   href="https://youtube.com/@ggsoftech"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition"
-                  title="YouTube"
+                  className="p-2.5 rounded-xl bg-white border border-rose-200 hover:bg-rose-50 text-rose-600 shadow-2xs transition"
+                  title="GG Softech YouTube"
                 >
                   <YoutubeIcon className="w-4 h-4" />
+                </a>
+
+                <a
+                  href="mailto:ghulamghaus266@gmail.com"
+                  className="ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-sm transition"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  Email Ghulam
+                </a>
+
+                <a
+                  href="https://wa.me/923067956164"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs shadow-2xs transition"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  WhatsApp
                 </a>
               </div>
             </div>
@@ -895,13 +1003,17 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-[#0b2f58] mb-3">Contact & Campus</h2>
             <p className="text-sm text-slate-400 mb-6">Enterprise consultations or campus visits — we&apos;re here.</p>
             <div className="p-5 rounded-2xl bg-[#f7fbfe] border border-sky-100 mb-5 space-y-3 text-xs sm:text-sm text-slate-600">
-              <div className="flex items-center gap-3">
-                <MapPin className="w-4 h-4 text-sky-500 shrink-0" />
-                <span><strong>Main Campus:</strong> Khurrianwala, Faisalabad, Punjab, Pakistan</span>
+              <div className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-[#0b2f58]">Main Campus / Office:</p>
+                  <p className="text-slate-700 font-medium">5, Marlah scheme, Khurrianwala, 37630, Faisalabad, Punjab, Pakistan</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5 font-mono">Plus Code: G746+28 Khurrianwala, Pakistan</p>
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-sky-500 shrink-0" />
-                <span><strong>WhatsApp:</strong> +92 306 7956164</span>
+                <span><strong>WhatsApp / Phone:</strong> +92 306 7956164</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-sky-500 shrink-0" />
@@ -910,20 +1022,39 @@ export default function LandingPage() {
             </div>
             <div className="rounded-2xl border border-sky-200 bg-[#f7fbfe] p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#0b2f58]">GG IT Solutions Campus</p>
-                <p className="text-[11px] text-slate-400">Khurrianwala · Faisalabad · 5.0 ★</p>
+                <p className="text-xs font-bold text-[#0b2f58]">Ghulam Ghaus IT Solutions</p>
+                <p className="text-[11px] text-slate-500">5, Marlah scheme, Khurrianwala · 5.0 ★ (Opens 10 AM)</p>
               </div>
-              <a href="https://maps.google.com/?q=Khurrianwala+Faisalabad" target="_blank" rel="noreferrer" className="text-xs font-bold text-sky-600 hover:text-sky-800 flex items-center gap-1">
-                Google Maps <ExternalLink className="w-3 h-3" />
+              <a
+                href="https://www.google.com/maps/place/Ghulam+Ghaus+IT+Solutions/@31.4915457,73.2321745,13z/data=!4m15!1m8!3m7!1s0x39226e035f67f90d:0xa4d3c7d11054e1be!2sKhurrianwala,+Pakistan!3b1!8m2!3d31.4976697!4d73.2731732!16zL20vMGZyNXg1!3m5!1s0x39226f4625313b13:0x66ed061fc9e1cdbb!8m2!3d31.5050687!4d73.260853!16s%2Fg%2F11zyppjrml"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs font-bold text-sky-600 hover:text-sky-800 flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg border border-sky-200 shadow-2xs hover:bg-sky-50 transition"
+              >
+                Open in Maps <ExternalLink className="w-3 h-3" />
               </a>
             </div>
           </div>
           <div className="rounded-3xl border border-sky-100 bg-white p-6 sm:p-8 shadow-md">
             <div className="flex rounded-xl bg-[#f0f7fd] p-1 mb-5">
-              <button type="button" onClick={() => setInquiryType('client')} className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${inquiryType === 'client' ? 'bg-white text-[#0b2f58] shadow-sm' : 'text-slate-500'}`}>
+              <button
+                type="button"
+                onClick={() => {
+                  setInquiryType('client');
+                  setInquiryTopic('Desktop POS & ERP Application (Electron.js)');
+                }}
+                className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${inquiryType === 'client' ? 'bg-white text-[#0b2f58] shadow-sm' : 'text-slate-500 hover:text-sky-700'}`}
+              >
                 Software Quote
               </button>
-              <button type="button" onClick={() => setInquiryType('student')} className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${inquiryType === 'student' ? 'bg-white text-[#0b2f58] shadow-sm' : 'text-slate-500'}`}>
+              <button
+                type="button"
+                onClick={() => {
+                  setInquiryType('student');
+                  setInquiryTopic('6-Month Diploma: Desktop App Engineering (Electron.js)');
+                }}
+                className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${inquiryType === 'student' ? 'bg-white text-[#0b2f58] shadow-sm' : 'text-slate-500 hover:text-sky-700'}`}
+              >
                 Course Admission
               </button>
             </div>
@@ -931,50 +1062,108 @@ export default function LandingPage() {
               <div className="p-6 rounded-2xl bg-sky-50 border border-sky-200 text-center">
                 <Sparkles className="w-8 h-8 text-sky-600 mx-auto mb-2" />
                 <h4 className="text-base font-bold text-sky-900">Thank You, {inquiryName}!</h4>
-                <p className="text-xs text-sky-700 mt-1">Our engineering lead will reach out within 24 hours.</p>
-                <button type="button" onClick={() => setInquirySubmitted(false)} className="mt-3 text-xs text-sky-700 font-bold underline">Send another inquiry</button>
+                <p className="text-xs text-sky-700 mt-1">
+                  {inquiryType === 'client'
+                    ? 'Our engineering team will review your project requirements and reach out within 24 hours.'
+                    : 'Our admissions desk led by Ghulam Ghaus will review your application and contact you shortly.'}
+                </p>
+                <button type="button" onClick={() => setInquirySubmitted(false)} className="mt-3 text-xs text-sky-700 font-bold underline">
+                  Submit another inquiry
+                </button>
               </div>
             ) : (
               <form onSubmit={(e) => { e.preventDefault(); setInquirySubmitted(true); }} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
-                  <input type="text" required value={inquiryName} onChange={e => setInquiryName(e.target.value)} placeholder="Enter your name"
-                    className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition" />
+                  <input
+                    type="text"
+                    required
+                    value={inquiryName}
+                    onChange={e => setInquiryName(e.target.value)}
+                    placeholder="Enter your name"
+                    className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition"
+                  />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Email</label>
-                    <input type="email" required value={inquiryEmail} onChange={e => setInquiryEmail(e.target.value)} placeholder="you@example.com"
-                      className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition" />
+                    <input
+                      type="email"
+                      required
+                      value={inquiryEmail}
+                      onChange={e => setInquiryEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition"
+                    />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Phone / WhatsApp</label>
-                    <input type="text" required value={inquiryPhone} onChange={e => setInquiryPhone(e.target.value)} placeholder="+92 300 1234567"
-                      className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition" />
+                    <input
+                      type="text"
+                      required
+                      value={inquiryPhone}
+                      onChange={e => setInquiryPhone(e.target.value)}
+                      placeholder="+92 300 1234567"
+                      className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition"
+                    />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Category</label>
-                  <select value={inquiryTopic} onChange={e => setInquiryTopic(e.target.value)}
-                    className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition">
-                    <option>Desktop POS & ERP (Electron.js + NestJS)</option>
-                    <option>Full-Stack Web / SaaS Platform</option>
-                    <option>Mobile App (React Native / Flutter)</option>
-                    <option>eSports Tournament Platform</option>
-                    <option>Microservices Architecture</option>
-                    <option>Real-Time Voice AI Integration</option>
-                    <option>Course: 6-Month Desktop Diploma</option>
-                    <option>Course: 6-Month Full-Stack Web Diploma</option>
-                    <option>Course: 3-Month Generative AI Track</option>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {inquiryType === 'client' ? 'Project Type / Software Service' : 'Select Course / Academic Program'}
+                  </label>
+                  <select
+                    value={inquiryTopic}
+                    onChange={e => setInquiryTopic(e.target.value)}
+                    className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition"
+                  >
+                    {inquiryType === 'client' ? (
+                      <>
+                        <option value="Desktop POS & ERP Application (Electron.js)">Desktop POS &amp; ERP Application (Electron.js + React + SQLite)</option>
+                        <option value="Full-Stack Web / SaaS Platform">Full-Stack Web / SaaS Platform (Next.js + NestJS)</option>
+                        <option value="Mobile App Development">Mobile App Development (React Native / Flutter)</option>
+                        <option value="eSports Tournament Platform">eSports Tournament Platform (Like Arenyxa)</option>
+                        <option value="Enterprise Microservices & High-Load APIs">Enterprise Microservices &amp; High-Load APIs</option>
+                        <option value="Real-Time Voice AI Conversational Agent">Real-Time Voice AI Conversational Agent (Twilio + Deepgram)</option>
+                        <option value="Cloud Architecture & DevOps Consulting">Cloud Architecture &amp; DevOps Consulting (AWS / Docker)</option>
+                        <option value="Custom Software Development">Custom Enterprise Software Development</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="6-Month Diploma: Desktop App Engineering (Electron.js)">6-Month Diploma: Desktop App Engineering (Electron.js + NestJS)</option>
+                        <option value="6-Month Diploma: Full-Stack Web Development">6-Month Diploma: Full-Stack Web Development (Next.js + NestJS)</option>
+                        <option value="6-Month Diploma: Mobile App Development">6-Month Diploma: Mobile App Development (React Native &amp; Flutter)</option>
+                        <option value="3-Month Track: Generative & Agentic AI">3-Month Track: Generative &amp; Agentic AI (Voice AI + LLMs)</option>
+                        <option value="3-Month Track: Backend Engineering & Microservices">3-Month Track: Backend Engineering &amp; Microservices (NestJS + Python)</option>
+                        <option value="3-Month Track: Database Engineering & SQL Mastery">3-Month Track: Database Engineering &amp; SQL Mastery (PostgreSQL / MySQL / MongoDB)</option>
+                        <option value="3-Month Track: JavaScript & TypeScript Deep Dive">3-Month Track: JavaScript &amp; TypeScript Deep Dive (ES6+)</option>
+                        <option value="Bonus Track: Freelancing, Upwork & Remote Jobs Mastery">Bonus Track: Freelancing, Upwork &amp; Remote Jobs Mastery</option>
+                      </>
+                    )}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Message</label>
-                  <textarea rows={3} value={inquiryMessage} onChange={e => setInquiryMessage(e.target.value)} placeholder="Briefly describe your project or goals..."
-                    className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition resize-none" />
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {inquiryType === 'client' ? 'Project Scope & Requirements' : 'Educational Background & Career Goals'}
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={inquiryMessage}
+                    onChange={e => setInquiryMessage(e.target.value)}
+                    placeholder={
+                      inquiryType === 'client'
+                        ? 'Describe your project requirements, target users, preferred timeline or budget...'
+                        : 'Tell us about your education, any previous programming experience, or career goals...'
+                    }
+                    className="w-full rounded-xl border border-sky-100 bg-[#f7fbfe] px-3.5 py-2.5 text-xs sm:text-sm focus:border-sky-400 focus:outline-none transition resize-none"
+                  />
                 </div>
-                <button type="submit" className="w-full rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
-                  <Send className="w-3.5 h-3.5" /> Submit Inquiry
+                <button
+                  type="submit"
+                  className="w-full rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  {inquiryType === 'client' ? 'Request Software Quote' : 'Submit Admission Application'}
                 </button>
               </form>
             )}
@@ -1008,10 +1197,10 @@ export default function LandingPage() {
             <p><a href="#success" className="hover:text-white transition">Alumni Hall of Fame</a></p>
           </div>
           <div className="text-xs text-sky-200/70 space-y-2">
-            <p className="font-bold text-white uppercase mb-2 tracking-wider text-[11px]">Connect</p>
+            <p className="font-bold text-white uppercase mb-2 tracking-wider text-[11px]">Connect &amp; Visit</p>
             <p>+92 306 7956164</p>
             <p>ghulamghaus266@gmail.com</p>
-            <p>Khurrianwala, Faisalabad</p>
+            <p>5, Marlah scheme, Khurrianwala, 37630, Faisalabad</p>
             <div className="pt-3 flex gap-3 text-white/70">
               <a href="https://linkedin.com/in/ghulam-ghaus-5b4ba9194" target="_blank" rel="noreferrer" className="hover:text-white transition"><LinkedinIcon className="w-4 h-4" /></a>
               <a href="https://github.com/Ghulam-Ghaus" target="_blank" rel="noreferrer" className="hover:text-white transition"><GithubIcon className="w-4 h-4" /></a>
@@ -1022,7 +1211,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="mx-auto max-w-6xl pt-6 border-t border-sky-900/40 text-center text-[11px] text-sky-300/50">
-          &copy; {new Date().getFullYear()} GG IT Solutions. All rights reserved. · Faisalabad, Pakistan
+          &copy; {new Date().getFullYear()} Ghulam Ghaus IT Solutions (GG IT Solutions). All rights reserved. · Khurrianwala, Faisalabad, Pakistan
         </div>
       </footer>
 
